@@ -31,7 +31,8 @@ interface RunOptions {
     client: ExtendedClient;
     interaction: ExtendedInteraction;
     args: CommandInteractionOptionResolver;
-    
+    userPermissions?: PermissionResolvable[];
+    botPermissions?: PermissionResolvable[];
 }
 
 interface AutocompleteOptions {
@@ -46,7 +47,7 @@ type RunFunction = (options: RunOptions) => any;
 type AutocompleteFunction = (options: AutocompleteOptions) => any;
 
 export type CommandType = {
-    type?: ApplicationCommandOptionType.Subcommand;
+    type: ApplicationCommandOptionType.Subcommand;
     userPermissions?: PermissionResolvable[];
     botPermissions?: PermissionResolvable[];
     run: RunFunction;

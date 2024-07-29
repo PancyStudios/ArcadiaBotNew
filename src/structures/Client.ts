@@ -184,7 +184,7 @@ export class ExtendedClient extends Client {
                 const command: CommandTypeSub = await this.importFile(filePath);
                 if (!command?.name) continue
                 categoryCommand.options.push(command)
-                this.commands.set(command.name, command)
+                this.commands.set(`${categoryName}.${command.name}`, command)
             }
 
             this.subCommands.set(categoryName, categoryCommand)
@@ -232,7 +232,7 @@ export class ExtendedClient extends Client {
                     const command: CommandTypeSub = await this.importFile(filePath);
                     if (!command?.name) continue
                     subCommand.options.push(command)
-                    this.commands.set(command.name, command)
+                    this.commands.set(`${categoryGroup}.${categoryName}.${command.name}`, command)
                 }
 
                 categoryGroupCommand.options.push(subCommand)
@@ -294,7 +294,6 @@ export class ExtendedClient extends Client {
         }   
 
         this.on("ready", (_) => {
-            console.debug(slashCommands)
             this.registerCommands({
                 commands: slashCommands,
             });
