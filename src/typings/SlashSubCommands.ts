@@ -5,6 +5,8 @@ import {
     AutocompleteInteraction,
     CommandInteractionOptionResolver,
     ApplicationCommandData,
+    ApplicationCommandSubCommandData,
+    ApplicationCommandOptionType,
 } from 'discord.js';
 import { ExtendedClient } from '../structures/Client';
 
@@ -44,8 +46,9 @@ type RunFunction = (options: RunOptions) => any;
 type AutocompleteFunction = (options: AutocompleteOptions) => any;
 
 export type CommandType = {
+    type: ApplicationCommandOptionType.Subcommand;
     userPermissions?: PermissionResolvable[];
     botPermissions?: PermissionResolvable[];
     run: RunFunction;
     auto?: AutocompleteFunction;
-} & ApplicationCommandData;
+} & ApplicationCommandSubCommandData;
