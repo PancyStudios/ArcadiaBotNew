@@ -59,7 +59,7 @@ function discordLogger(type: string, message: string, prefix: string) {
             const embed = new EmbedBuilder()
                 .setColor(color(type))
                 .setTitle(`Registro de tipo: ${type}`)
-                .setDescription(typeof message === 'string' ? message : 'ErrorTextInput')
+                .setDescription(`\`\`\`bash\n${typeof message === 'string' ? message : 'ErrorTextInput'}\`\`\``)
                 .setTimestamp()
                 .setFooter({ text: `💫 - By PancyStudios`, });
 
@@ -74,7 +74,7 @@ function discordLogger(type: string, message: string, prefix: string) {
             const errorEmbed = new EmbedBuilder()
                 .setColor(color(type))
                 .setTitle(`Registro de tipo: ${type}`)
-                .setDescription(message)
+                .setDescription(`\`\`\`bash\n${message}\`\`\``)
                 .setTimestamp()
                 .setFooter({ text: `💫 - By PancyStudios`, });
 
