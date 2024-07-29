@@ -41,5 +41,5 @@ export default new Event('ready', async(client) => {
                 Activities[random]
             ]
         })
-    }, 15000)
+    }, 1000 * 30)
 })

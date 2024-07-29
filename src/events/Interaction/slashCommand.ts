@@ -12,7 +12,7 @@ export default new Event('interactionCreate', async(interaction) => {
 
             if(commandSubGroup) {
                 const group = interaction.options.getSubcommandGroup()
-                const subCommandGroup = client.subCommandsCategory.get(group)
+                const subCommandGroup = client.groupSubCommandsCategory.get(group)
                 if(!subCommandGroup) return interaction.reply({ content: 'El comando no existe, por favor, contacta con el desarollador.', ephemeral: true })
                 const subcommand = interaction.options.getSubcommand()
                 const command = client.commands.get(`${commandSubGroup}.${subCommandGroup}.${subcommand}`)
