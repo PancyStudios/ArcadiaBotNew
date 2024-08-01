@@ -20,21 +20,21 @@ console.log = (message, prefix) => {
     const date = DateTime.now().setZone('America/Mexico_City');
     message = securityText(message);
     originalConsoleLog('[' + chalk.blue(prefix ? prefix : 'SYS') + '] : [' + chalk.green('INFO') + '] ' + chalk.bold(chalk.grey(`${date.hour}:${date.minute}:${date.second}`)) + ' : ', message);
-    discordLogger('log', message, prefix);
+    discordLogger('Log', message, prefix);
 };
 
 console.warn = (message, prefix) => {
     const date = DateTime.now().setZone('America/Mexico_City');
     message = securityText(message);
     originalConsoleLog('[' + chalk.blue(prefix ? prefix : 'SYS') + '] : [' + chalk.magenta('WARN') + '] ' + chalk.bold(chalk.grey(`${date.hour}:${date.minute}:${date.second}`)) + ' : ', message);
-    discordLogger('warn', message, prefix);
+    discordLogger('Warn', message, prefix);
 }
 
 console.debug = (message, prefix) => {
     const date = DateTime.now().setZone('America/Mexico_City');
     message = securityText(message);
     originalConsoleLog('[' + chalk.blue(prefix ? prefix : 'SYS') + '] : [' + chalk.cyan('DEBUG') + '] ' + chalk.bold(chalk.grey(`${date.hour}:${date.minute}:${date.second}`)) + ' : ', message);
-    discordLogger('debug', message, prefix);
+    discordLogger('Debug', message, prefix);
 }
 
 console.error = (message: Error, prefix) => {
@@ -45,20 +45,20 @@ console.error = (message: Error, prefix) => {
     if(message.cause || message.stack || message.name || message.message) originalConsoleLog('[' + chalk.blue(prefix ? prefix : 'SYS') + '] : [' + chalk.red('ERROR') + '] ' + chalk.bold(chalk.grey(`${date.hour}:${date.minute}:${date.second}`)) + ' : ', messageString);
     
     // discordLogger('error', messageString, prefix);
-    if(!(message.cause || message.stack || message.name || message.message)) discordLogger('error', message as unknown as string, prefix);
-    if(message.cause || message.stack || message.name || message.message) discordLogger('error', messageString, prefix);
+    if(!(message.cause || message.stack || message.name || message.message)) discordLogger('Error', message as unknown as string, prefix);
+    if(message.cause || message.stack || message.name || message.message) discordLogger('Error', messageString, prefix);
 
 }
 
 function discordLogger(type: string, message: string, prefix: string) {
-    if(errors >= 30) type = 'critical';
+    if(errors >= 30) type = 'Critical';
     switch(type) {
-        case 'log':
-        case 'warn':
-        case 'debug':
+        case 'Log':
+        case 'Warn':
+        case 'Debug':
             const embed = new EmbedBuilder()
                 .setColor(color(type))
-                .setTitle(`Registro de tipo: ${type}`)
+                .setTitle(`${type} | ${prefix ? prefix : 'SYS'}`)
                 .setDescription(`\`\`\`bash\n${typeof message === 'string' ? message : 'ErrorTextInput'}\`\`\``)
                 .setTimestamp()
                 .setFooter({ text: `💫 - By PancyStudios`, });
@@ -70,10 +70,10 @@ function discordLogger(type: string, message: string, prefix: string) {
                 errors++;
             });
             break;
-        case 'error':
+        case 'Error':
             const errorEmbed = new EmbedBuilder()
                 .setColor(color(type))
-                .setTitle(`Registro de tipo: ${type}`)
+                .setTitle(`${type} | ${prefix ? prefix : 'SYS'}`)
                 .setDescription(`\`\`\`bash\n${message}\`\`\``)
                 .setTimestamp()
                 .setFooter({ text: `💫 - By PancyStudios`, });
@@ -85,11 +85,11 @@ function discordLogger(type: string, message: string, prefix: string) {
                 errors++;
             });
             break;
-        case 'critical':
+        case 'Critical':
             const dateCritical = DateTime.now().setZone('America/Mexico_City');
             const criticalEmbed = new EmbedBuilder()
                 .setColor(Colors.Red)
-                .setTitle(`Registro de tipo: ${type}`)
+                .setTitle(`${type} | ${prefix ? prefix : 'SYS'}`)
                 .setDescription(message + '\n' + 'Por seguridad el sistema se detendra en 5 segundos, ya que se dectecto un gran autemto de errores')
                 .setTimestamp()
                 .setFooter({ text: `💫 - By PancyStudios`, });
@@ -116,14 +116,14 @@ function discordLogger(type: string, message: string, prefix: string) {
 
 function color(type: string) {
     switch(type) {
-        case 'log':
-        case 'info':
+        case 'Log':
+        case 'Info':
             return Colors.Green;
-        case 'warn':
+        case 'Warn':
             return Colors.Yellow;
-        case 'debug':
+        case 'Debug':
             return Colors.Aqua;
-        case 'error':
+        case 'Error':
             return Colors.Red;
     }
 }
