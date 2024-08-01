@@ -116,7 +116,6 @@ export default new Command({
         .setCustomId('description')
         .setLabel('Descripcion del embed')
         .setStyle(TextInputStyle.Paragraph)
-        .setMaxLength(4096)
         .setRequired(true)
 
         const AuthorInput = new TextInputBuilder()
