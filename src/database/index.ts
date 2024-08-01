@@ -11,7 +11,7 @@ import {
     ConnectionStates
 } from 'mongoose'
 import { WarnsDb } from './types/Warns'
-import { GuildDb } from './types/Guild'
+import { GuildDb, guildSchema } from './types/Guild'
 import { EmbedDb } from './types/Embed'
 
 const warnsSchema = new Schema({
@@ -24,51 +24,23 @@ const embedSchema = new Schema({
     guildId: { type: SchemaTypes.String, required: true },
     name: { type: SchemaTypes.String, required: true },
     embed: {
-        title: { type: SchemaTypes.String, required: true },
+        title: { type: SchemaTypes.String, required: false },
         description: { type: SchemaTypes.String, required: true },
-        color: { type: SchemaTypes.Number, required: true },
+        color: { type: SchemaTypes.Number, required: false },
         footer: {
-            text: { type: SchemaTypes.String, required: true },
-            icon_url: { type: SchemaTypes.String, required: true }
+            text: { type: SchemaTypes.String, required: false },
+            icon_url: { type: SchemaTypes.String, required: false }
         },
         author: {
-            name: { type: SchemaTypes.String, required: true },
-            icon_url: { type: SchemaTypes.String, required: true }
+            name: { type: SchemaTypes.String, required: false },
+            icon_url: { type: SchemaTypes.String, required: false }
         },
         image: {
-            url: { type: SchemaTypes.String, required: true }
+            url: { type: SchemaTypes.String, required: false }
         },
         thumbnail: {
-            url: { type: SchemaTypes.String, required: true }
+            url: { type: SchemaTypes.String, required: false }
         },
-    }
-})
-
-const guildSchema = new Schema({
-    guildId: { type: SchemaTypes.String, required: true },
-    modules: {
-        suggestions: { type: SchemaTypes.Boolean, required: true },
-        tickets: { type: SchemaTypes.Boolean, required: true },
-        welcome: { type: SchemaTypes.Boolean, required: true },
-        leave: { type: SchemaTypes.Boolean, required: true },
-        messageLogs: { type: SchemaTypes.Boolean, required: true },
-        logs: { type: SchemaTypes.Boolean, required: true },
-        autostats: { type: SchemaTypes.Boolean, required: true }
-    },
-    loggers: {
-        type: SchemaTypes.Array,
-        required: true,
-        default: []
-    },
-    settings: {
-        tickets: {
-            supportRole: { type: SchemaTypes.String, required: true },
-            categoryOpen: { type: SchemaTypes.String, required: true },
-            categoryClosed: { type: SchemaTypes.String, required: true },
-            channelLogs: { type: SchemaTypes.String, required: true },
-            channelTranscripts: { type: SchemaTypes.String, required: true }
-        } 
-        
     }
 })
 
@@ -88,7 +60,7 @@ export class ArcadiaDb {
     constructor() {}
 
     async init() {
-        console.log('Conectando a la base de datos')
+        console.log('Conectando a la base de datos', 'MongoDb')
         this.db = await connect('mongodb://dono-03.danbot.host:1785/', {
             user: 'admin',
             pass: process.env.mongooseDbPassword,
@@ -96,11 +68,11 @@ export class ArcadiaDb {
             appName: 'Arcadia',
             dbName: 'Arcadia',
         }).catch((err) => {
-            console.warn('No se pudo conectar a la base de datos', err)
-            console.error(err)
+            console.warn('No se pudo conectar a la base de datos', 'MongoDb')
+            console.error(err, 'MongoDb')
         })
 
-        if(this.db) { console.log('Conectado a la base de datos') }
+        if(this.db) { console.log('Conectado a la base de datos', 'MongoDb') }
 
         this.warns = model<WarnsDb>('warns', warnsSchema)
         this.guilds = model<GuildDb>('guilds', guildSchema)
@@ -120,7 +92,7 @@ export class ArcadiaDb {
         if(status === ConnectionStates.disconnecting) return ' | Desconectando'
         if(status === ConnectionStates.uninitialized) return ' | No inicializada'
         return ' | Estado desconocido'
-    }       
+    }
 
     async disconnect() {
         await connection.close().catch((err) => {

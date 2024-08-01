@@ -2,6 +2,9 @@ import chalk from "chalk";
 import { DateTime } from "luxon";
 import { WebhookClient, Colors, EmbedBuilder } from "discord.js";
 
+const loggerWebhook = process.env.loggerlogWebhook ? new WebhookClient({ url: process.env.loggerlogWebhook }) : null;
+const errorWebhook = process.env.loggerErrorWebhook ? new WebhookClient({ url: process.env.loggerErrorWebhook }) : null;
+
 const originalConsoleLog = console.log;
 const originalConsoleError = console.error;
 
@@ -46,9 +49,6 @@ console.error = (message: Error, prefix) => {
     if(message.cause || message.stack || message.name || message.message) discordLogger('error', messageString, prefix);
 
 }
-
-const loggerWebhook = process.env.loggerlogWebhook ? new WebhookClient({ url: process.env.loggerlogWebhook }) : null;
-const errorWebhook = process.env.loggerErrorWebhook ? new WebhookClient({ url: process.env.loggerErrorWebhook }) : null;
 
 function discordLogger(type: string, message: string, prefix: string) {
     if(errors >= 30) type = 'critical';

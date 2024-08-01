@@ -11,3 +11,4 @@ export const db = new ArcadiaDb()
 
 db.init()
 clientExtend.start()
+

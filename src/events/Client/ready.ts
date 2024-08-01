@@ -42,4 +42,8 @@ export default new Event('ready', async(client) => {
             ]
         })
     }, 1000 * 30)
+
+    client.guilds.cache.forEach(guild => {
+        console.log(`Instalando ${guild.name} (${guild.id})`, 'GUILD')
+    })
 })
