@@ -50,6 +50,8 @@ export default new Command({
             required: false
         },
     ],
+    userPermissions: ['ManageMessages'],
+
     auto: async({ interaction, args}) => {
         const focus = args.getFocused(true)
         if(focus.name !== 'color') return;
@@ -111,6 +113,7 @@ export default new Command({
         .setLabel('Titulo del embed')
         .setStyle(TextInputStyle.Short)
         .setMaxLength(256)
+        .setRequired(false)
 
         const DescriptionInput = new TextInputBuilder()
         .setCustomId('description')
@@ -123,18 +126,21 @@ export default new Command({
         .setLabel('Autor del embed')
         .setStyle(TextInputStyle.Short)
         .setMaxLength(256)
+        .setRequired(false)
 
         const FooterInput = new TextInputBuilder()
         .setCustomId('footer')
         .setLabel('Footer del embed')
         .setStyle(TextInputStyle.Short)
         .setMaxLength(256)
+        .setRequired(false)
 
         const ImageUrl = new TextInputBuilder()
         .setCustomId('image_url')
         .setLabel('URL de la imagen del embed')
         .setStyle(TextInputStyle.Short)
         .setMaxLength(256)
+        .setRequired(false)
 
         const TitleRow = new ActionRowBuilder<TextInputBuilder>()
         .setComponents(TitleInput)
