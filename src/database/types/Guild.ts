@@ -97,12 +97,12 @@ export const guildSchema = new Schema({
         welcome: {
             channel: { type: SchemaTypes.String, required: false },
             message: { type: SchemaTypes.String, required: false },
-            embed: { type: SchemaTypes.Boolean, required: false }
+            embed: { type: SchemaTypes.String, required: false }
         },
         leave: {
             channel: { type: SchemaTypes.String, required: false },
             message: { type: SchemaTypes.String, required: false },
-            embed: { type: SchemaTypes.Boolean, required: false }
+            embed: { type: SchemaTypes.String, required: false }
         },
         messageLogs: {
             delete: {

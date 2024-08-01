@@ -25,22 +25,25 @@ export async function InstallGuild(guild: Guild) {
                 channelLogs: "",
                 webhookLogs: "",
                 channelTranscripts: "",
-                webhookTranscripts: ""
+                webhookTranscripts: "",
+                embed: "",
+                choices: ['General']
             },
             suggestions: {
                 adminChannel: "",
                 suggestionsChannel: "",
-                roleGestion: ""
+                roleGestion: "",
+                topics: ['General']
             },
             welcome: {
                 channel: "",
                 message: "",
-                embed: false
+                embed: ""
             },
             leave: {
                 channel: "",
                 message: "",
-                embed: false
+                embed: ""
             },
             messageLogs: {
                 delete: {
