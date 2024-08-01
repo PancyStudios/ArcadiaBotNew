@@ -1,5 +1,6 @@
 import { Event } from "../../structures/Event";
 import { ActivityType } from 'discord.js';
+import { InstallGuild } from "../../utils/func";
 
 export default new Event('ready', async(client) => {
     console.debug(`Bot listo como ${client.user.tag}`);
@@ -43,7 +44,8 @@ export default new Event('ready', async(client) => {
         })
     }, 1000 * 30)
 
-    client.guilds.cache.forEach(guild => {
+    client.guilds.cache.forEach(async guild => {
         console.log(`Instalando ${guild.name} (${guild.id})`, 'GUILD')
+        await InstallGuild(guild)
     })
 })
