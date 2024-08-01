@@ -202,6 +202,6 @@ export default new Command({
             embed: embedCreate.toJSON()
         })
         newEmbed.save()
-        interaction.reply({ content: `Embed ${name} creado\n\nEsta es la vista previa del embed`, embeds: [embedCreate] })
+        Modal.reply({ content: `Embed ${name} creado\n\nEsta es la vista previa del embed`, embeds: [embedCreate] })
     }
 })
