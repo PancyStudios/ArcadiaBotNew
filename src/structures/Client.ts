@@ -8,7 +8,6 @@ import {
     ApplicationCommandType,
     ApplicationCommandOptionData,
     ApplicationCommandData,
-    ChatInputApplicationCommandData,
     ApplicationCommandOptionType,
 } from "discord.js";
 import path from 'path';

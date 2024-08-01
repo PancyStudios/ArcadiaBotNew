@@ -28,5 +28,12 @@ export const embedSchema = new Schema({
         thumbnail: {
             url: { type: SchemaTypes.String, required: false }
         },
+        fields: [
+            {
+                name: { type: SchemaTypes.String, required: false },
+                value: { type: SchemaTypes.String, required: false },
+                inline: { type: SchemaTypes.Boolean, required: false }
+            }
+        ]
     }
 })

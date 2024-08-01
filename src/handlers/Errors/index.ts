@@ -19,7 +19,6 @@ export class ErrorHandler {
             console.warn(warning.stack || 'No stack');
             console.warn(warning.cause || 'No cause');
         });
-
         console.log('AntiCrash listo');
     }
 }
