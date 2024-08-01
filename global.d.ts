@@ -14,7 +14,7 @@ declare global {
             loggerlogWebhook: string;
             loggerErrorWebhook: string;
             globalModerationWebhook: string;
-            
+            mongooseDbPassword: string;
         }
     }
 }
