@@ -78,52 +78,52 @@ export const guildSchema = new Schema({
     },
     settings: {
         tickets: {
-            supportRole: { type: SchemaTypes.String, required: true },
-            categoryOpen: { type: SchemaTypes.String, required: true },
-            categoryClosed: { type: SchemaTypes.String, required: true },
-            channelLogs: { type: SchemaTypes.String, required: true },
-            webhookLogs: { type: SchemaTypes.String, required: true },
-            channelTranscripts: { type: SchemaTypes.String, required: true },
-            webhookTranscripts: { type: SchemaTypes.String, required: true },
-            choices: { type: SchemaTypes.Array, required: true },
-            embed: { type: SchemaTypes.String, required: true }
+            supportRole: { type: SchemaTypes.String, required: false },
+            categoryOpen: { type: SchemaTypes.String, required: false },
+            categoryClosed: { type: SchemaTypes.String, required: false },
+            channelLogs: { type: SchemaTypes.String, required: false },
+            webhookLogs: { type: SchemaTypes.String, required: false },
+            channelTranscripts: { type: SchemaTypes.String, required: false },
+            webhookTranscripts: { type: SchemaTypes.String, required: false },
+            choices: { type: SchemaTypes.Array, required: false },
+            embed: { type: SchemaTypes.String, required: false }
         },
         suggestions: {
-            adminChannel: { type: SchemaTypes.String, required: true },
-            suggestionsChannel: { type: SchemaTypes.String, required: true },
-            roleGestion: { type: SchemaTypes.String, required: true },
-            topics: { type: SchemaTypes.Array, required: true }
+            adminChannel: { type: SchemaTypes.String, required: false },
+            suggestionsChannel: { type: SchemaTypes.String, required: false },
+            roleGestion: { type: SchemaTypes.String, required: false },
+            topics: { type: SchemaTypes.Array, required: false }
         },
         welcome: {
-            channel: { type: SchemaTypes.String, required: true },
-            message: { type: SchemaTypes.String, required: true },
-            embed: { type: SchemaTypes.Boolean, required: true }
+            channel: { type: SchemaTypes.String, required: false },
+            message: { type: SchemaTypes.String, required: false },
+            embed: { type: SchemaTypes.Boolean, required: false }
         },
         leave: {
-            channel: { type: SchemaTypes.String, required: true },
-            message: { type: SchemaTypes.String, required: true },
-            embed: { type: SchemaTypes.Boolean, required: true }
+            channel: { type: SchemaTypes.String, required: false },
+            message: { type: SchemaTypes.String, required: false },
+            embed: { type: SchemaTypes.Boolean, required: false }
         },
         messageLogs: {
             delete: {
-                channel: { type: SchemaTypes.String, required: true },
-                webhook: { type: SchemaTypes.String, required: true }
+                channel: { type: SchemaTypes.String, required: false },
+                webhook: { type: SchemaTypes.String, required: false }
             },
             edit: {
-                channel: { type: SchemaTypes.String, required: true },
-                webhook: { type: SchemaTypes.String, required: true }
+                channel: { type: SchemaTypes.String, required: false },
+                webhook: { type: SchemaTypes.String, required: false }
             }
         },
         logs: {
-            channel: { type: SchemaTypes.String, required: true },
-            webhook: { type: SchemaTypes.String, required: true }
+            channel: { type: SchemaTypes.String, required: false },
+            webhook: { type: SchemaTypes.String, required: false }
         },
         autostats: {
-            category: { type: SchemaTypes.String, required: true },
-            MembersTotal: { type: SchemaTypes.String, required: true },
-            MembersUsers: { type: SchemaTypes.String, required: true },
-            MembersBots: { type: SchemaTypes.String, required: true },
-            types: { type: SchemaTypes.Array, required: true }
+            category: { type: SchemaTypes.String, required: false },
+            MembersTotal: { type: SchemaTypes.String, required: false },
+            MembersUsers: { type: SchemaTypes.String, required: false },
+            MembersBots: { type: SchemaTypes.String, required: false },
+            types: { type: SchemaTypes.Array, required: false }
         }
     }
 })
