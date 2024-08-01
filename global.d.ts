@@ -12,6 +12,7 @@ declare global {
             enviroment: "dev" | "prod" | "debug";
             PORT: number;
             loggerlogWebhook: string;
+            serverPort: number;
             loggerErrorWebhook: string;
             globalModerationWebhook: string;
             mongooseDbPassword: string;

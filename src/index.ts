@@ -9,7 +9,7 @@ import { ServerWeb } from './handlers/Server'
 export const clientExtend = new ExtendedClient()
 export const errorManager = new ErrorHandler()
 export const db = new ArcadiaDb()
-export const server = new ServerWeb(process.env.PORT || 3000)
+export const server = new ServerWeb(process.env.PORT || process.env.serverPort || 3000)
 
 db.init()
 clientExtend.start()
