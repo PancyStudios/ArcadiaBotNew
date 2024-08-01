@@ -4,7 +4,7 @@ import { AutostatsTypes } from "../../database/types/Guild"
 
 export async function InstallGuild(guild: Guild) {
     const { guilds } = ArcadiaDb
-    const guildDb = guilds.findOne({ guildId: guild.id })
+    const guildDb = await guilds.findOne({ guildId: guild.id })
     if(guildDb) return console.log(`El servidor ${guild.name} (${guild.id}) ya esta en la base de datos`, 'GUILD')
     const newGuild = new guilds({
         guildId: guild.id,
