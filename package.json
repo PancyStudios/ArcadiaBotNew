@@ -10,6 +10,7 @@
     "chalk": "4.1.2",
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "glob": "8.1.0",
     "luxon": "^3.4.4",
     "mongoose": "^8.5.1"
