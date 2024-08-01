@@ -9,5 +9,5 @@ export const clientExtend = new ExtendedClient()
 export const errorManager = new ErrorHandler()
 export const db = new ArcadiaDb()
 
-
+db.init()
 clientExtend.start()

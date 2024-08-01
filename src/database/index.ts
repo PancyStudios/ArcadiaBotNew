@@ -85,25 +85,27 @@ export class ArcadiaDb {
     }, any>
 
 
-    constructor() {
-        (async () => {
-            this.db = await connect('mongodb://dono-03.danbot.host:1785/', {
-                user: 'admin',
-                pass: process.env.mongooseDbPassword,
-                compressors: 'none',
-                appName: 'Arcadia',
-                dbName: 'Arcadia',
-            }).catch((err) => {
-                console.warn('No se pudo conectar a la base de datos', err)
-                console.error(err)
-            })
+    constructor() {}
 
-            if(this.db) { console.log('Conectado a la base de datos') }
-
-            this.warns = model<WarnsDb>('warns', warnsSchema)
-            this.guilds = model<GuildDb>('guilds', guildSchema)
-            this.embeds = model<EmbedDb>('embeds', embedSchema)
+    async init() {
+        console.log('Conectando a la base de datos')
+        this.db = await connect('mongodb://dono-03.danbot.host:1785/', {
+            user: 'admin',
+            pass: process.env.mongooseDbPassword,
+            compressors: 'none',
+            appName: 'Arcadia',
+            dbName: 'Arcadia',
+        }).catch((err) => {
+            console.warn('No se pudo conectar a la base de datos', err)
+            console.error(err)
         })
+
+        if(this.db) { console.log('Conectado a la base de datos') }
+
+        this.warns = model<WarnsDb>('warns', warnsSchema)
+        this.guilds = model<GuildDb>('guilds', guildSchema)
+        this.embeds = model<EmbedDb>('embeds', embedSchema)
+
     }
 
     getStatusDb() {
