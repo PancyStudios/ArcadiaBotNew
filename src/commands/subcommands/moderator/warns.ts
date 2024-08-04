@@ -25,7 +25,7 @@ export default new Command({
             
             > 💫 - **Cantidad de advertencias:** 0
             > 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>`)
-        .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.id})
+        .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
 
         
         const embedFind = new EmbedBuilder()
@@ -35,7 +35,7 @@ export default new Command({
             
             > 💫 - **Cantidad de advertencias:** Desconocido
             > 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>`)
-        .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.id})
+        .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
 
         interaction.reply({ embeds: [embedFind], ephemeral: true })
         if(user) {

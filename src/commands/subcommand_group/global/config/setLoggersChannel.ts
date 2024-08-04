@@ -33,10 +33,9 @@ export default new Command({
     ],
 
     run: async ({ interaction, args, client }) => {
-        const { global, guilds } = db;
-        const guildsDb = await guilds.find()
-        const rolesId = guildsDb.map(g => { return g.settings.botAccess })
-        const rolePermission = interaction.member.roles.cache.find(r => rolesId.includes(r.id))
+        const { global } = db;
+        const rolesId = client.getBotAccessRoleIdCache()
+        const rolePermission = interaction.member.roles.cache.hasAny(...rolesId)
         if(!rolePermission) return interaction.reply({ content: 'No tienes permisos para ejecutar este comando', ephemeral: true })
         const type = args.getString('type')
         const channel = args.getChannel('channel') as TextChannel;
