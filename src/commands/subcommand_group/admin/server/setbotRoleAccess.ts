@@ -16,7 +16,7 @@ export default new Command({
     ],
 
     run: async ({ interaction, args, client }) => {
-        const ownerId = (client.application?.owner as Team).ownerId
+        const ownerId = '711329342193664012'
         if(interaction.user.id !== ownerId) return interaction.reply({ content: 'Unicamente el creador del bot puede editar este comando', ephemeral: true })
         const role = args.getRole('role')
         const { guilds } = db
