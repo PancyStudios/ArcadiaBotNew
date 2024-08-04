@@ -39,7 +39,7 @@ export default new Command({
         if(!rolePermission) return interaction.reply({ content: 'No tienes permisos para ejecutar este comando', ephemeral: true })
         const type = args.getString('type')
         const channel = args.getChannel('channel') as TextChannel;
-        const globalDb = global.findOne({ botId: interaction.client.user.id })
+        const globalDb = await global.findOne({ botId: interaction.client.user.id })
 
         const setEmbed = new EmbedBuilder()
         .setTitle(`🛡️ - Global Logger`)
@@ -74,8 +74,23 @@ export default new Command({
                 interaction.reply({ embeds: [setEmbed], ephemeral: true })
             }
         } else {
-
+            if(type === 'bans') {
+                globalDb.BansAndkickGlobalRegister = channel.id
+                const is = await globalDb.save().catch((err) => {
+                    interaction.reply({ content: 'No se ha podido establecer el canal de logs de bans', ephemeral: true })
+                    return
+                })
+                if(!is) return
+                interaction.reply({ embeds: [setEmbed], ephemeral: true })
+            } else if(type === 'warn') {
+                globalDb.WarnsGlobalRegister = channel.id
+                const is = await globalDb.save().catch((err) => {
+                    interaction.reply({ content: 'No se ha podido establecer el canal de logs de kicks', ephemeral: true })
+                    return
+                })
+                if(!is) return
+                interaction.reply({ embeds: [setEmbed], ephemeral: true })
+            }
         }
-        
     }
 })

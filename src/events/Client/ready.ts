@@ -7,6 +7,7 @@ import { db } from "../..";
 export default new Event('ready', async(client) => {
     console.debug(`Bot listo como ${client.user.tag}`);
 
+
     let Activities = [
         {
             name: '⚒️ | ArcasBot en desarrollo',
@@ -52,7 +53,9 @@ export default new Event('ready', async(client) => {
     })
 
     try {
-        const { guilds } = db
+        const { guilds, global } = db
+        const globalDb = await global.findOne({ botId: client.user.id })
+        if(!globalDb) new global({ botId: client.user.id, WarnsGlobalRegister: null, BansAndkickGlobalRegister: null}).save()
         const guildsDb = await guilds.find({})
         guildsDb.forEach(async guild => {
             const roleid = guild.settings.botAccess

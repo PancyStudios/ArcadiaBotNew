@@ -93,7 +93,7 @@ export default new Command({
                 horas = Math.floor(horas / 24)
             }
     
-            const textTime = `${dias ? `${dias} dias, ` : ''}${horas ? `${horas} horas, ` : ''}${min ? `${min} minutos, ` : ''}${seg ? `${seg} segundos` : ''}`
+            const textTime = `${dias ? `${dias} D, ` : ''}${horas ? `${horas} H, ` : ''}${min ? `${min} M, ` : ''}${seg ? `${seg} S` : ''}`
     
             interaction.respond([{ value: segundos, name: textTime }])
         }
