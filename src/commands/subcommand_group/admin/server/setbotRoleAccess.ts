@@ -20,12 +20,18 @@ export default new Command({
         if(interaction.user.id !== ownerId) return interaction.reply({ content: 'Unicamente el creador del bot puede editar este comando', ephemeral: true })
         const role = args.getRole('role')
         const { guilds } = db
-        const guild = guilds.findOneAndUpdate({ guildId: interaction.guild.id },  { settings: { botRoleAccess: role.id } }, { upsert: true }).catch((err) => {
+        const guild =await guilds.findOne({ guildId: interaction.guild.id }).catch((err) => {
             interaction.reply({ content: 'No se ha podido establecer el rol', ephemeral: true })
             return
         })
         if(!guild) return;
+        guild.settings.botAccess = role.id
+        await guild.save().catch((err) => {
+            interaction.reply({ content: 'No se ha podido establecer el rol', ephemeral: true })
+            return
+        })
         interaction.reply({ content: `Rol ${role.name} establecido como rol de acceso al bot`, ephemeral: true })
         client.setBotAccessRoleIdCache(role.id)
+        client.getBotAccessRoleIdCache()
     }
 })
