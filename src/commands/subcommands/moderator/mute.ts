@@ -100,6 +100,7 @@ export default new Command({
         }
 
         const filterArray = filter.filter(choice => choice.name.toLowerCase().includes(focus.value.toLowerCase()))
+        if(filterArray.length === 0) return interaction.respond([{ name: 'No se han encontrado resultados', value: 1800 }])
         interaction.respond(filterArray)
     },
     run: async ({ interaction, args }) => {
