@@ -14,12 +14,12 @@ export default new Command({
             required: true,
             choices: [
                 {
-                    name: 'Bans',
+                    name: 'Bans / Kicks',
                     value: 'bans'
                 },
                 {
-                    name: 'Kicks',
-                    value: 'kicks'
+                    name: 'Warns',
+                    value: 'warn'
                 }
             ]
         },
@@ -52,8 +52,8 @@ export default new Command({
             if(type === 'bans') {
                 const newGlobal = new global({
                     botId: client.user.id,
-                    bansGlobalRegister: channel.id,
-                    kicksGlobalRegister: ''
+                    BansAndkickGlobalRegister: channel.id,
+                    WarnsGlobalRegister: ''
                 })
                 const is = await newGlobal.save().catch((err) => {
                     interaction.reply({ content: 'No se ha podido establecer el canal de logs de bans', ephemeral: true })
@@ -61,11 +61,11 @@ export default new Command({
                 })
                 if(!is) return
                 interaction.reply({ embeds: [setEmbed], ephemeral: true })
-            } else if(type === 'kicks') {
+            } else if(type === 'warn') {
                 const newGlobal = new global({
                     botId: client.user.id,
-                    bansGlobalRegister: '',
-                    kicksGlobalRegister: channel.id
+                    BansAndkickGlobalRegister: '',
+                    WarnsGlobalRegister: channel.id
                 })
                 const is = await newGlobal.save().catch((err) => {
                     interaction.reply({ content: 'No se ha podido establecer el canal de logs de kicks', ephemeral: true })

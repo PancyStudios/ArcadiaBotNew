@@ -1,0 +1,69 @@
+import { Command } from "../../../structures/SubCommandSlash";
+import { db } from '../../..'
+import { ApplicationCommandOptionType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, EmbedBuilder, ComponentType } from "discord.js";
+
+export default new Command({
+    name: 'warn-remove',
+    description: 'Elimina un warn de un usuario',
+    type: ApplicationCommandOptionType.Subcommand,
+    options: [
+        {
+            name: 'user',
+            description: 'Usuario a eliminar el warn',
+            type: ApplicationCommandOptionType.User,
+            required: true,
+        }
+    ],
+    userPermissions: ['KickMembers'],
+
+    run: async({ interaction, args }) => {
+        const { guildId } = interaction
+        const { warns } = db
+        const user = args.getUser('user')
+        const warnDb = await warns.findOne({ guildId: guildId, userId: user.id })
+
+        if(!warnDb || warnDb.warns.length === 0) {
+            return interaction.reply({ content: 'El usuario no tiene advertencias', ephemeral: true })
+        }
+        
+        const embed = new EmbedBuilder()
+        .setTitle(`🔖 - Lista de advertencias de ${interaction.user.username} (${interaction.user.id})`)
+        .setColor('Orange')  
+        .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.id})
+
+        let description: string = ``
+        let options: StringSelectMenuOptionBuilder[] = []
+        warnDb.warns.forEach(async warn => {
+            const moderator = await interaction.guild.members.fetch(warn.moderator)
+            description += `> **Advertencia:** ${warn.reason} \n> **Moderador:** ${moderator ? moderator.user.tag : 'Desconocido'} \n> **ID:** ${warn.id} \n\n`
+
+            options.push(
+                new StringSelectMenuOptionBuilder()
+                .setLabel(`Advertencia: ${warn.id}`)
+                .setDescription(`Razón: ${warn.reason}`)
+                .setValue(warn.id)
+                .setEmoji('🛡️')
+            )
+        })
+        description += `> 💫 - **Cantidad de advertencias:** ${warnDb.warns.length} \n> 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>\n\`\`\`\n 🛡️ Selecciona las advertencias a eliminar\`\`\``
+        embed.setDescription(description)
+
+        const menu = new StringSelectMenuBuilder()
+        .setCustomId('warn-remove')
+        .setPlaceholder('Selecciona las advertencias a eliminar')
+
+        const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>()
+        .addComponents(menu.addOptions(options))
+
+        const reply = await interaction.reply({ embeds: [embed], components: [actionRow] }).catch(() => {})
+        if(!reply) return
+        const response = await reply.awaitMessageComponent({ componentType: ComponentType.StringSelect, time:  240_000 }).catch(() => {})
+        if(!response) return interaction.editReply({ content: 'Tiempo de espera agotado', components: [] })
+        const choices = response.values
+
+        const newWarns = warnDb.warns.filter(warn => !choices.includes(warn.id))
+        await warns.updateOne({ guildId: guildId, userId: user.id }, { $set: { warns: newWarns } })
+
+        interaction.editReply({ content: 'Advertencias eliminadas', components: [] })
+    }
+})

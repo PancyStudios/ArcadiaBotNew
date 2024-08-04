@@ -26,5 +26,6 @@ export default new Command({
         })
         if(!guild) return;
         interaction.reply({ content: `Rol ${role.name} establecido como rol de acceso al bot`, ephemeral: true })
+        client.setBotAccessRoleIdCache(role.id)
     }
 })

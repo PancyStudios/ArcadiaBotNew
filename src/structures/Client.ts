@@ -19,6 +19,7 @@ import { CommandType } from "../typings/SlashCommand";
 import { CommandType as CommandTypeSub } from "../typings/SlashSubCommands";
 import { RegisterCommandsOptions } from "../typings/Client";
 import { MenuType } from "../typings/Menu";
+import { get } from "mongoose";
 
 const globPromise = promisify(glob);
 
@@ -41,6 +42,7 @@ export class ExtendedClient extends Client {
     categoryCommand: Collection<string, CategoryCommandType> = new Collection();
     menusString: Collection<string, MenuType> = new Collection();
     menuStringDynamic: Collection<string, MenuType> = new Collection();
+    botAccessRoleIdCache: Array<string> = [];
 
     constructor() {
         super({ 
@@ -312,5 +314,17 @@ export class ExtendedClient extends Client {
             if(!event?.event) return;
             this.on(event.event, event.run);
         });
+    }
+
+    setBotAccessRoleIdCache(roleId: string) {
+        return this.botAccessRoleIdCache.push(roleId);
+    }
+
+    removeBotAccessRoleIdCache(roleId: string) {
+        return this.botAccessRoleIdCache = this.botAccessRoleIdCache.filter((id) => id !== roleId);
+    }
+
+    getBotAccessRoleIdCache() {
+        return this.botAccessRoleIdCache;
     }
 }

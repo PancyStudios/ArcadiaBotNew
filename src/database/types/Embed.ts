@@ -1,10 +1,10 @@
-import { EmbedData } from "discord.js"
+import { APIEmbed } from "discord.js"
 import { Schema, SchemaTypes } from "mongoose"
 
 export type EmbedDb = {
     name: string
     guildId: string
-    embed: EmbedData
+    embed: APIEmbed
 }
 
 export const embedSchema = new Schema({

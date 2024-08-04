@@ -94,7 +94,6 @@ export default new Command({
 
         const date = new Date()
         const dateTimestamp = date.getTime() / 1000
-        dateTimestamp.valueOf()
 
         const msgUrl = msg.url
         const embed = new EmbedBuilder()
@@ -106,7 +105,7 @@ export default new Command({
             ⚒️ - Acción realizada por: ${interaction.user.username} (${interaction.user.id})
             🛡️ - Realizado en el canal: ${interaction.channel.url}
 
-            🕒 - Fecha: <t:${dateTimestamp.valueOf()}>`)
+            🕒 - Fecha: <t:${Math.floor(dateTimestamp)}>`)
         .setThumbnail(interaction.guild.iconURL())
         .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.client.user.avatarURL() })
         
@@ -115,8 +114,8 @@ export default new Command({
         const { global } = db
         const guild = await global.findOne({ botId: client.user.id})
         if(!guild) return;
-        if(!guild.bansGlobalRegister) return;
-        const globalChannel = await client.channels.fetch(guild.bansGlobalRegister) as TextChannel
+        if(!guild.BansAndkickGlobalRegister) return;
+        const globalChannel = await client.channels.fetch(guild.BansAndkickGlobalRegister) as TextChannel
         if(!globalChannel) return;
         globalChannel.send({ embeds: [embed] }).catch((err) => {
             console.log(err)

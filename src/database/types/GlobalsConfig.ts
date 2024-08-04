@@ -5,18 +5,18 @@ import {
 } from 'mongoose'
 
 export type GlobalConfig = {
-    bansGlobalRegister: string,
-    kicksGlobalRegister: string,
+    BansAndkickGlobalRegister: string,
+    WarnsGlobalRegister: string,
     botId: string
 }
 
 export const GlobalConfigSchema = new Schema<GlobalConfig>({
-    bansGlobalRegister: {
+    BansAndkickGlobalRegister: {
         type: SchemaTypes.String,
         required: false,
         default: ''
     },
-    kicksGlobalRegister: {
+    WarnsGlobalRegister: {
         type: SchemaTypes.String,
         required: false,
         default: ''

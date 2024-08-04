@@ -1,6 +1,7 @@
 import { Command } from '../../../structures/SubCommandSlash';
 import { db } from '../../..';
-import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import { ApplicationCommandOptionType, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ColorResolvable, resolveColor, EmbedBuilder } from 'discord.js';
+import { isUrl, textChange } from '../../../utils/func';
 import hexColorRegex from 'hex-color-regex';
 
 export default new Command({
@@ -54,9 +55,9 @@ export default new Command({
         },
     ],
 
-    auto: async({ interaction, args }) => {
+    auto: async ({ interaction, args }) => {
         const focus = args.getFocused(true)
-            if(focus.name === 'color') {  
+        if (focus.name === 'color') {
             const isHex = hexColorRegex({ strict: true }).test(focus.value)
             let choices = [
                 { name: "Negro", value: "Default" },
@@ -90,20 +91,20 @@ export default new Command({
                 { name: "Oscuro Pero No Negro", value: "DarkButNotBlack" },
                 { name: "No Tan Negro", value: "NotQuiteBlack" }
             ]
-            
-            if(isHex) choices.push({
+
+            if (isHex) choices.push({
                 name: focus.value,
                 value: focus.value
             })
-            
+
             const filter = choices.filter(x => x.name.includes(focus.value)).slice(0, 25);
-            interaction.respond(filter.map(x => ({ name: x.name, value: x.value})))
-        } else if(focus.name === 'embed') {
+            interaction.respond(filter.map(x => ({ name: x.name, value: x.value })))
+        } else if (focus.name === 'embed') {
             const { guildId } = interaction
             const { embeds } = db
             const embedDb = await embeds.find({ guildId: guildId })
-    
-            const choices = embedDb.map(embed => { 
+
+            const choices = embedDb.map(embed => {
                 return embed.name
             })
             const filter = choices.filter(embed => embed.startsWith(focus.value)).slice(0, 25)
@@ -116,7 +117,140 @@ export default new Command({
             interaction.respond(filterArray)
         }
     },
-    run: async({ interaction, args }) => {
-        
+    run: async ({ interaction, args }) => {
+        const embed = args.getString('embed')
+        const form = args.getString('form')
+        const color = args.getString('color') as ColorResolvable;
+        const footer_icon_url = args.getString('footer_icon_url')
+        const author_icon_url = args.getString('author_icon_url')
+        const thumbnail_url = args.getString('thumbnail_url')
+
+        let colorResolve: number
+        colorResolve = resolveColor(color)
+        if (!colorResolve) return interaction.reply({ content: 'Color invalido', ephemeral: true })
+
+        const { member, guild } = interaction
+        const { embeds } = db
+
+        const embedDb = await embeds.findOne({ guildId: guild.id, name: embed })
+        if (!embedDb) return interaction.reply({ content: 'No se ha encontrado el embed', ephemeral: true })
+
+        if (colorResolve) embedDb.embed.color = colorResolve
+        if (footer_icon_url && isUrl(footer_icon_url, member, guild)) embedDb.embed.footer.icon_url = footer_icon_url
+        if (author_icon_url && isUrl(author_icon_url, member, guild)) embedDb.embed.author.icon_url = author_icon_url
+        if (thumbnail_url && isUrl(thumbnail_url, member, guild)) embedDb.embed.thumbnail.url = thumbnail_url
+
+        if (form === 'edit') {
+            const ModalEdit = new ModalBuilder()
+                .setTitle('Editar Embed')
+                .setCustomId('edit_embed' + interaction.id)
+
+            const TitleInput = new TextInputBuilder()
+                .setCustomId('title')
+                .setLabel('Titulo del embed')
+                .setStyle(TextInputStyle.Short)
+                .setMaxLength(256)
+                .setRequired(false)
+                .setValue(embedDb.embed.title ?? null)
+
+            const DescriptionInput = new TextInputBuilder()
+                .setCustomId('description')
+                .setLabel('Descripcion del embed')
+                .setStyle(TextInputStyle.Paragraph)
+                .setRequired(true)
+                .setValue(embedDb.embed.description ?? null)
+
+            const AuthorInput = new TextInputBuilder()
+                .setCustomId('author')
+                .setLabel('Autor del embed')
+                .setStyle(TextInputStyle.Short)
+                .setMaxLength(256)
+                .setRequired(false)
+                .setValue(embedDb.embed.author.name ?? null)
+
+            const FooterInput = new TextInputBuilder()
+                .setCustomId('footer')
+                .setLabel('Footer del embed')
+                .setStyle(TextInputStyle.Short)
+                .setMaxLength(256)
+                .setRequired(false)
+                .setValue(embedDb.embed.footer.text ?? null)
+
+            const ImageUrl = new TextInputBuilder()
+                .setCustomId('image_url')
+                .setLabel('URL de la imagen del embed')
+                .setStyle(TextInputStyle.Short)
+                .setMaxLength(256)
+                .setRequired(false)
+                .setValue(embedDb.embed.image.url ?? null)
+
+            const TitleRow = new ActionRowBuilder<TextInputBuilder>()
+                .setComponents(TitleInput)
+
+            const DescriptionRow = new ActionRowBuilder<TextInputBuilder>()
+                .setComponents(DescriptionInput)
+
+            const AuthorRow = new ActionRowBuilder<TextInputBuilder>()
+                .setComponents(AuthorInput)
+
+            const FooterRow = new ActionRowBuilder<TextInputBuilder>()
+                .setComponents(FooterInput)
+
+            const ImageRow = new ActionRowBuilder<TextInputBuilder>()
+                .setComponents(ImageUrl)
+
+            ModalEdit.setComponents([TitleRow, DescriptionRow, AuthorRow, FooterRow, ImageRow])
+
+            await interaction.showModal(ModalEdit)
+
+            const Modal = await interaction.awaitModalSubmit({ time: 120_000, filter: (i) => i.customId === `create_embed_${interaction.user.id}` }).catch(() => {
+                interaction.editReply({ content: 'Tiempo de espera agotado / No se recibio una respuesta', components: [] })
+            })
+            if (!Modal) return
+
+            let title = Modal.fields.getField('title').value
+            if (title === "") title = null
+            let description = Modal.fields.getField('description').value
+            if (description === "") description = null
+            let author = Modal.fields.getField('author').value
+            if (author === "") author = null
+            let footer = Modal.fields.getField('footer').value
+            if (footer === "") footer = null
+            let image_url = Modal.fields.getField('image_url').value
+            if (image_url === "") image_url = null
+
+            if (title) embedDb.embed.title = title
+            if (description) embedDb.embed.description = description
+            if (author) embedDb.embed.author.name = author
+            if (footer) embedDb.embed.footer.text = footer
+            if (image_url && isUrl(image_url, member, guild)) embedDb.embed.image.url = image_url
+        }
+
+        await embedDb.save().catch((err) => {
+            interaction.reply({ content: 'Error al guardar el embed\nDetalles en consola', ephemeral: true })
+            console.error(err)
+        })
+
+        await interaction.reply({ content: 'Embed editado correctamente', ephemeral: true })
+        const embedEdit = new EmbedBuilder({
+            color: embedDb.embed.color,
+            title: textChange(embedDb.embed.title, member, guild),
+            description: textChange(embedDb.embed.description, member, guild),
+            footer: {
+                text: textChange(embedDb.embed.footer.text, member, guild),
+                iconURL: isUrl(embedDb.embed.footer.icon_url, member, guild) ? textChange(embedDb.embed.footer.icon_url, member, guild) : null
+            },
+            author: {
+                name: textChange(embedDb.embed.author.name, member, guild),
+                iconURL: isUrl(embedDb.embed.author.icon_url, member, guild) ? textChange(embedDb.embed.author.icon_url, member, guild) : null
+            },
+            image: {
+                url: isUrl(embedDb.embed.image.url, member, guild) ? textChange(embedDb.embed.image.url, member, guild) : null
+            },
+            thumbnail: {
+                url: isUrl(embedDb.embed.thumbnail.url, member, guild) ? textChange(embedDb.embed.thumbnail.url, member, guild) : null
+            }
+        })
+        interaction.editReply({ embeds: [embedEdit] })
     }
 })
