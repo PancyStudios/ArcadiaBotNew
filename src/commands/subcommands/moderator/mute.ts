@@ -79,21 +79,22 @@ export default new Command({
             let min: number
             let horas: number
             let dias: number
-    
-            if(segundos >= 60) {
+            
+            seg = segundos
+            if(seg >= 60) {
+                min = Math.floor(seg / 60)
                 seg = segundos % 60
-                min = Math.floor(segundos / 60)
             }
             if(min >= 60) {
-                horas = min % 60
-                min = Math.floor(min / 60)
+                horas = Math.floor(min / 60)
+                min = min % 60
             }
             if(horas >= 24) {
+                dias = Math.floor(horas / 24)
                 dias = horas % 24
-                horas = Math.floor(horas / 24)
             }
     
-            const textTime = `${dias ? `${dias} D, ` : ''}${horas ? `${horas} H, ` : ''}${min ? `${min} M, ` : ''}${seg ? `${seg} S` : ''}`
+            const textTime = `${dias ? `${dias} D ` : ''}${horas ? `${horas} H ` : ''}${min ? `${min} M ` : ''}${seg ? `${seg} S` : ''}`
     
             interaction.respond([{ value: segundos, name: textTime }])
         }
