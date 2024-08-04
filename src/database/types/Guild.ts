@@ -65,6 +65,17 @@ export type AutostatsSettings = {
     types: AutostatsTypes[]
 }
 
+export enum StatusTypes {
+    Java = 0,
+    Bedrock = 1
+}
+
+export type Status = {
+    ip: string,
+    port: number,
+    type: StatusTypes
+}
+
 export const guildSchema = new Schema({
     guildId: { type: SchemaTypes.String, required: true },
     modules: {
@@ -124,7 +135,13 @@ export const guildSchema = new Schema({
             MembersUsers: { type: SchemaTypes.String, required: false },
             MembersBots: { type: SchemaTypes.String, required: false },
             types: { type: SchemaTypes.Array, required: false }
-        }
+        },
+        status: {
+            ip: { type: SchemaTypes.String, required: false },
+            port: { type: SchemaTypes.Number, required: false },
+            type: { type: SchemaTypes.Number, required: false }
+        },
+        botAccess: { type: SchemaTypes.String, required: false }
     }
 })
 
@@ -148,5 +165,7 @@ export type GuildDb = {
         messageLogs: MessageLogsSettings,
         logs: LogsSettings,
         autostats: AutostatsSettings
+        status: Status
+        botAccess: string
     }
 }

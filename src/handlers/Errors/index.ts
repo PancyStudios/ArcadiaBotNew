@@ -1,4 +1,4 @@
-
+import '../../utils/log'
 export class ErrorHandler {
     constructor() {
         process.on('uncaughtException', async (err, origin) => {

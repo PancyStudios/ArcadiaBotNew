@@ -11,6 +11,7 @@ import {
 import { WarnsDb, warnsSchema } from './types/Warns'
 import { GuildDb, guildSchema } from './types/Guild'
 import { EmbedDb, embedSchema } from './types/Embed'
+import { GlobalConfig, GlobalConfigSchema } from './types/GlobalsConfig'
 
 
 export class ArcadiaDb {
@@ -24,7 +25,9 @@ export class ArcadiaDb {
     guilds: Model<GuildDb, {}, {}, {}, Document<unknown, {}, GuildDb> & GuildDb & {
         _id: Types.ObjectId;
     }, any>
-
+    global: Model<GlobalConfig, {}, {}, {}, Document<unknown, {}, GlobalConfig> & GlobalConfig & {
+        _id: Types.ObjectId;
+    }, any>
 
     constructor() {
 
@@ -32,7 +35,7 @@ export class ArcadiaDb {
 
     async init() {
         console.log('Conectando a la base de datos', 'MongoDb')
-        this.db = await connect('mongodb://dono-03.danbot.host:1785/', {
+        this.db = await connect(process.env.mongooseDbUrl, {
             user: 'admin',
             pass: process.env.mongooseDbPassword,
             compressors: 'none',
@@ -50,8 +53,7 @@ export class ArcadiaDb {
         this.warns = model<WarnsDb>('warns', warnsSchema)
         this.guilds = model<GuildDb>('guilds', guildSchema)
         this.embeds = model<EmbedDb>('embeds', embedSchema)
-
-        
+        this.global = model<GlobalConfig>('global', GlobalConfigSchema)
     }
 
     getStatusDb() {
@@ -74,5 +76,13 @@ export class ArcadiaDb {
             console.error(err)
         })
         console.warn('Desconectado de la base de datos')
+    }
+
+    async ping() {
+        const date1 = new Date()
+        await connection.db.admin().ping()
+        const date2 = new Date()
+        const diff = date2.getTime() - date1.getTime()
+        return diff
     }
 }

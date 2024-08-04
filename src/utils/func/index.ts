@@ -65,16 +65,25 @@ export async function InstallGuild(guild: Guild) {
                 MembersUsers: "",
                 MembersBots: "",
                 types: [AutostatsTypes.MembersTotal, AutostatsTypes.MembersUsers]
-            }
+            },
+            status: {
+                ip: "",
+                port: 0,
+                type: null
+            },
+            botAccess: ""
         }
     })
     newGuild.save()
     console.log(`El servidor ${guild.name} (${guild.id}) ha sido añadido a la base de datos`, 'GUILD')
 }
 export function isUrl(url: string, member?: GuildMember, guild?: Guild) {
-    const regex = new RegExp(/^(http|https):\/\/[^ "]+$/);
+    const regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi);
+    if(!url) return false
     const finalText = textChange(url, member, guild)
-    return regex.test(finalText)
+    if(!finalText.match(regex)) return false
+    if(finalText.match(regex).length === 0) return false
+    return true
 }
 
 export function textChange(text: string, member?: GuildMember, guild?: Guild) {
