@@ -35,25 +35,25 @@ export default new Command({
 
         let description: string = ``
         let options: StringSelectMenuOptionBuilder[] = []
+        const menu = new StringSelectMenuBuilder()
+        .setCustomId('warn-remove')
+        .setPlaceholder('Selecciona las advertencias a eliminar')
+        .setMaxValues(25)
         warnDb.warns.forEach(async warn => {
             const moderator = await interaction.guild.members.fetch(warn.moderator)
             description += `> **Advertencia:** ${warn.reason} \n> **Moderador:** ${moderator ? moderator.user.tag : 'Desconocido'} \n> **ID:** ${warn.id} \n\n`
 
-            options.push(
+            menu.addOptions(
                 new StringSelectMenuOptionBuilder()
                 .setLabel(`Advertencia: ${warn.id}`)
                 .setDescription(`Razón: ${warn.reason}`)
                 .setValue(warn.id)
                 .setEmoji('🛡️')
             )
-            options = options.slice(0, 24)
         })
         description += `> 💫 - **Cantidad de advertencias:** ${warnDb.warns.length} \n> 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>\n\`\`\`\n 🛡️ Selecciona las advertencias a eliminar\`\`\``
         embed.setDescription(description)
 
-        const menu = new StringSelectMenuBuilder()
-        .setCustomId('warn-remove')
-        .setPlaceholder('Selecciona las advertencias a eliminar')
 
         const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>()
         .addComponents(menu.addOptions(options))
