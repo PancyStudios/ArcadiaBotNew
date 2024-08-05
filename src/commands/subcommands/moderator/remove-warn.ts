@@ -1,6 +1,6 @@
 import { Command } from "../../../structures/SubCommandSlash";
 import { db } from '../../..'
-import { ApplicationCommandOptionType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, EmbedBuilder, ComponentType } from "discord.js";
+import { ApplicationCommandOptionType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, EmbedBuilder, TextChannel, ComponentType } from "discord.js";
 
 export default new Command({
     name: 'warn-remove',
@@ -16,7 +16,7 @@ export default new Command({
     ],
     userPermissions: ['KickMembers'],
 
-    run: async({ interaction, args }) => {
+    run: async({ interaction, args, client }) => {
         const { guildId } = interaction
         const { warns } = db
         const user = args.getUser('user')
@@ -73,9 +73,41 @@ export default new Command({
         if(!response) return interaction.editReply({ content: 'Tiempo de espera agotado', components: [] })
         const choices = response.values
 
+        const embedFinal = new EmbedBuilder()
+        .setTitle(`🔖 - Advertencias eliminadas de ${user.username} (${user.id})`)
+        .setDescription(`Advertencias eliminadas: ${choices.map(c => `\n> **ID:** ${c}`).join('')}`)
+        .setColor('Green')
+        .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
+
         const newWarns = warnDb.warns.filter(warn => !choices.includes(warn.id))
         await warns.updateOne({ guildId: guildId, userId: user.id }, { $set: { warns: newWarns } })
 
         interaction.editReply({ content: 'Advertencias eliminadas', components: [] })
+
+        const msg = await interaction.fetchReply()
+        const globalDb = await global.findOne({ botId: client.user.id })
+        if(globalDb) {
+            const warnDb2 = await warns.findOne({ guildId: guildId, userId: user.id })
+            const channelId = globalDb.WarnsGlobalRegister
+            const channel = await client.channels.fetch(channelId) as TextChannel;
+ 
+            await choices.forEach(async id => {
+                const embedLog = new EmbedBuilder()
+                .setAuthor({ name: `🌙 - Advertencia Eliminada`, url: msg?.url ?? null })
+                .setColor(warnDb2.warns.length >= 7 ? 'Red' :'Yellow')
+                .setDescription(`⚠️ - **Usuario:** ${user.tag} (${user.id})
+                    🔖 - **Recuento de advertencias:** ${warnDb2.warns.length} / 7 ${warnDb2.warns.length >= 7 ? 'El usuario a superado/llegado al limite de advertencias' : ''}
+                    🗑️ - **ID de la advertencia eliminada**: ${id}
+                    
+                    🛡️ - **Moderador:** ${interaction.user.tag} (${interaction.user.id})
+                    ⚒️ - **Accion realizada en:** ${interaction.channel.url}
+    
+                    🕒 - **Fecha:** <t:${Math.floor(Date.now() / 1000)}>`)
+                .setThumbnail(interaction.guild.iconURL())
+                .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: client.user.avatarURL() })
+    
+                setTimeout(async() => await channel?.send({ embeds: [embedLog] }),1000)
+            })
+        }
     }
 })
