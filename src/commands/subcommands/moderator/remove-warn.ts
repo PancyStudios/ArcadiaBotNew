@@ -18,7 +18,7 @@ export default new Command({
 
     run: async({ interaction, args, client }) => {
         const { guildId } = interaction
-        const { warns } = db
+        const { warns, global } = db
         const user = args.getUser('user')
         const warnDb = await warns.findOne({ guildId: guildId, userId: user.id })
 
@@ -82,7 +82,7 @@ export default new Command({
         const newWarns = warnDb.warns.filter(warn => !choices.includes(warn.id))
         await warns.updateOne({ guildId: guildId, userId: user.id }, { $set: { warns: newWarns } })
 
-        interaction.editReply({ content: 'Advertencias eliminadas', components: [] })
+        interaction.editReply({ content: null, embeds: [embedFinal], components: [] })
 
         const msg = await interaction.fetchReply()
         const globalDb = await global.findOne({ botId: client.user.id })
