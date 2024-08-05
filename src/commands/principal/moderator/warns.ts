@@ -9,7 +9,7 @@ export default new Command({
     options: [
         {
             name: 'usuario',
-            description: 'Usuario a buscar',
+            description: '[STAFF ONLY] Usuario a buscar',
             type: ApplicationCommandOptionType.User,
             required: false,
         }

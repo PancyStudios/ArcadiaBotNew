@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoiceData, ApplicationCommandOptionType, EmbedBuilder, TextChannel } from "discord.js";
+import { ActionRowBuilder, ApplicationCommandOptionChoiceData, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, EmbedBuilder, TextChannel } from "discord.js";
 import { Command } from "../../../structures/SubCommandSlash";
 import { db } from "../../..";
 
@@ -17,7 +17,8 @@ export default new Command({
             name: 'reason',
             description: 'Razón del baneo',
             type: ApplicationCommandOptionType.String,
-            required: true
+            required: true,
+            max_length: 60
         },
         {
             name: 'delete_messages',
@@ -27,6 +28,7 @@ export default new Command({
             autocomplete: true
         }
     ],
+    userPermissions: ['BanMembers'],
     botPermissions: ['BanMembers'],
 
     auto: async ({ interaction, args }) => {
@@ -77,8 +79,22 @@ export default new Command({
         if(!member.bannable) return interaction.reply({ content: 'No puedo banear a este usuario', ephemeral: true })
         if(interaction.member.roles.highest.position <= member.roles.highest.position) return interaction.reply({ content: 'El usuario tiene igual o menor rango que tu', ephemeral: true })
         if(me.roles.highest.position <= member.roles.highest.position) return interaction.reply({ content: 'No puedo banear a este usuario debido a que tiene un rango igual o mayor que el mio', ephemeral: true })
-        
-        const ban = await member.ban({ reason: reason, deleteMessageSeconds: deleteMessages }).catch((err) => {
+        const msgUser = await user.send({ embeds: [
+            new EmbedBuilder()
+            .setTitle('🔨 - Baneo')
+            .setDescription(`Has sido baneado de ${interaction.guild.name} por la siguiente razón: ${reason}`)
+            .setColor('Orange')
+            .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
+        ], components: [
+            new ActionRowBuilder<ButtonBuilder>()
+            .addComponents(
+                new ButtonBuilder()
+                .setLabel('Apelar Baneo')
+                .setStyle(ButtonStyle.Link)
+                .setURL('https://discord.gg/kYYRhasZxQ')
+            )
+        ] }).catch(() => {})
+        const ban = await member.ban({ reason: `${interaction.user.tag} - ${reason}`, deleteMessageSeconds: deleteMessages }).catch((err) => {
             interaction.reply({ content: 'No se ha podido banear al usuario', ephemeral: true })
             return
         })

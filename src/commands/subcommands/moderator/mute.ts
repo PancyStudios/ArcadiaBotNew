@@ -1,5 +1,5 @@
 import { Command } from "../../../structures/SubCommandSlash";
-import { ApplicationCommandOptionType } from "discord.js";
+import { ApplicationCommandOptionType, Embed, EmbedBuilder } from "discord.js";
 
 export default new Command({
     name: 'mute',
@@ -8,7 +8,7 @@ export default new Command({
     options: [
         {
             name: 'user',
-            description: 'Usuario a mutear',
+            description: 'Usuario a silenciar',
             type: ApplicationCommandOptionType.User,
             required: true
         },
@@ -27,6 +27,7 @@ export default new Command({
         }
     ],
     userPermissions: ['MuteMembers'],
+    botPermissions: ['MuteMembers'],
 
     auto: async ({ interaction, args }) => {
         const focus = args.getFocused(true)
@@ -73,6 +74,8 @@ export default new Command({
                 value: 604800
             }
         ]
+
+        let choices2 = []
         if(!isNaN(parseInt(focus.value))) {
             const segundos = parseInt(focus.value)
             let seg: number
@@ -93,10 +96,10 @@ export default new Command({
                 dias = Math.floor(horas / 24)
                 dias = horas % 24
             }
-    
             const textTime = `${dias ? `${dias} D ` : ''}${horas ? `${horas} H ` : ''}${min ? `${min} M ` : ''}${seg ? `${seg} S` : ''}`
-    
-            interaction.respond([{ value: segundos, name: textTime }])
+            choices2.push({ name: textTime, value: segundos })
+            if(interaction.responded) return;
+            return interaction.respond(choices2)
         }
 
         const filterArray = filter.filter(choice => choice.name.toLowerCase().includes(focus.value.toLowerCase()))
@@ -109,16 +112,91 @@ export default new Command({
         const time = args.getNumber('time')
 
         const member = await interaction.guild.members.fetch(user.id)
-        member.timeout(time, reason)
+        if(interaction.member.roles.highest.position <= member.roles.highest.position) return interaction.reply({ embeds: [
+            new EmbedBuilder()
+            .setTitle('⚒️ - Error de permisos')
+            .setDescription('No puedes silenciar a un usuario con un rol igual o superior al tuyo.')
+            .setColor('Red')
+            .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
+        ], ephemeral: true })
+        const me = await interaction.guild.members.fetch(interaction.client.user.id)
+        if(me.roles.highest.position <= member.roles.highest.position) return interaction.reply({ embeds: [
+            new EmbedBuilder()
+            .setTitle('⚒️ - Error de permisos')
+            .setDescription('No puedo silenciar a este usuario debido a que tiene un rol igual o superior al mio.')
+            .setColor('Red')
+            .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
+        ], ephemeral: true })
+        if(member.permissions.has(['Administrator']) || member.permissions.has(['MuteMembers'])) return interaction.reply({ embeds: [
+            new EmbedBuilder()
+            .setTitle('⚒️ - Error de permisos')
+            .setDescription('No puedo silenciar a este usuario debido a que tiene el permiso `MuteMembers`.')
+            .setColor('Red')
+            .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
+        ], ephemeral: true })
+        if(!member.moderatable) return interaction.reply({ embeds: [
+            new EmbedBuilder()
+            .setTitle('⚒️ - Error de permisos')
+            .setDescription('No puedo silenciar a este usuario.')
+            .setColor('Red')
+            .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
+        ], ephemeral: true })
+        member.timeout(time * 1000, reason)
         .then(() => {
+            let seg: number
+            let min: number
+            let horas: number
+            let dias: number
+            
+            seg = time
+            if(seg >= 60) {
+                min = Math.floor(seg / 60)
+                seg = time % 60
+            }
+            if(min >= 60) {
+                horas = Math.floor(min / 60)
+                min = min % 60
+            }
+            if(horas >= 24) {
+                dias = Math.floor(horas / 24)
+                dias = horas % 24
+            }
+            const textTime = `${dias ? `${dias} D ` : ''}${horas ? `${horas} H ` : ''}${min ? `${min} M ` : ''}${seg ? `${seg} S` : ''}`
+
+            const MuteEmbedChannel = new EmbedBuilder()
+            .setTitle('🔇 - Usuario silenciado')
+            .setDescription(`El usuario ${user.tag} ha sido silenciado con exito
+
+                > Tiempo: ${textTime} (<t:${Math.floor(Date.now() / 1000) + time}:R>)
+                > Razón: ${reason}
+                > Moderador: ${interaction.user.id}`)
+            .setColor('Green')
+            .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
+
+            const MuteEmbedUser = new EmbedBuilder()
+            .setTitle('🔇 - Has sido silenciado')
+            .setDescription(`Has sido silenciado en el servidor ${interaction.guild.name}
+
+                > Tiempo: ${textTime} (<t:${Math.floor(Date.now() / 1000) + time}:R>)
+                > Razón: ${reason}`)
+            .setColor('Orange')
+            .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
+            
             interaction.reply({
-                content: `El miembro ${user.tag} ha sido muteado por ${time} segundos.`,
-                ephemeral: true
+                embeds: [MuteEmbedChannel],
             })
+
+            user.send({ embeds: [MuteEmbedUser] }).catch(() => { console.warn('El usuario tiene el md cerrado' )})
         })
-        .catch((err) => {
+        .catch((err: Error) => {
             interaction.reply({
-                content: 'No se ha podido mutear al usuario',
+                embeds: [
+                    new EmbedBuilder()
+                    .setTitle('⚒️ - Error al silenciar')
+                    .setDescription(`Ocurrio un error al intentar silenciar al usuario ${user.tag}\nEl error es el siguiente:\`\`\`js\n${err.message || ''} ${err.cause || ''} ${err.name || ''} ${err.stack|| ''}\`\`\``)
+                    .setColor('Red')
+                    .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
+                ],
                 ephemeral: true
             })
             console.error(err)
