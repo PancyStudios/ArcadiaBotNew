@@ -34,7 +34,6 @@ export default new Command({
         .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
 
         let description: string = ``
-        let options: StringSelectMenuOptionBuilder[] = []
         const menu = new StringSelectMenuBuilder()
         .setCustomId('warn-remove')
         .setPlaceholder('Selecciona las advertencias a eliminar')
