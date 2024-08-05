@@ -56,7 +56,7 @@ export default new Command({
 
 
         const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>()
-        .addComponents(menu.addOptions(options))
+        .addComponents(menu)
 
         if(options.length = 0) return interaction.editReply({ content: 'Error en crear el array' })
         const reply = await interaction.editReply({ embeds: [embed], components: [actionRow] }).catch((err) => { console.error(err) })
