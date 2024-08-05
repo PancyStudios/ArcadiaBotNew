@@ -39,7 +39,7 @@ export default new Command({
 
         await interaction.reply({ embeds: [embedFind], ephemeral: true })
         if(user) {
-            if(interaction.member.permissions.has('ManageMessages') || interaction.member.roles.cache.hasAny(...client.getBotAccessRoleIdCache())) return interaction.editReply({ content: 'No tienes permisos para ver la lista de advertencias de otro usuario', embeds: [] })
+            if(!(interaction.member.permissions.has('ManageMessages') || interaction.member.roles.cache.hasAny(...client.getBotAccessRoleIdCache()))) return interaction.editReply({ content: 'No tienes permisos para ver la lista de advertencias de otro usuario', embeds: [] })
             const warnList = await warns.findOne({ guildId: interaction.guildId, userId: user.id })
             if(!warnList) return interaction.editReply({ embeds: [embedClearAdv] })
             if(warnList.warns.length === 0) return interaction.editReply({ embeds: [embedClearAdv] })
