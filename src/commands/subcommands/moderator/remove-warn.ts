@@ -29,7 +29,7 @@ export default new Command({
         const embed = new EmbedBuilder()
         .setTitle(`🔖 - Lista de advertencias de ${interaction.user.username} (${interaction.user.id})`)
         .setColor('Orange')  
-        .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.id})
+        .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
 
         let description: string = ``
         let options: StringSelectMenuOptionBuilder[] = []

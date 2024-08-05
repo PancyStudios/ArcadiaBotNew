@@ -37,7 +37,7 @@ export default new Command({
             > 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>`)
         .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
 
-        interaction.reply({ embeds: [embedFind], ephemeral: true })
+        await interaction.reply({ embeds: [embedFind], ephemeral: true })
         if(user) {
             if(interaction.member.permissions.has('ManageMessages') || interaction.member.roles.cache.hasAny(...client.getBotAccessRoleIdCache())) return interaction.editReply({ content: 'No tienes permisos para ver la lista de advertencias de otro usuario', embeds: [] })
             const warnList = await warns.findOne({ guildId: interaction.guildId, userId: user.id })
