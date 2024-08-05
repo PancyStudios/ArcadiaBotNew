@@ -41,7 +41,8 @@ export default new Command({
         .setMaxValues(25)
         .setMinValues(1)
 
-        warnDb.warns.forEach(async warn => {
+        await warnDb.warns.forEach(async warn => {
+            console.debug(warn)
             const moderator = await interaction.guild.members.fetch(warn.moderator)
             description += `> **Advertencia:** ${warn.reason} \n> **Moderador:** ${moderator ? moderator.user.tag : 'Desconocido'} \n> **ID:** ${warn.id} \n\n`
             const option = new StringSelectMenuOptionBuilder()
@@ -53,16 +54,15 @@ export default new Command({
                 option
             )
         })
+
         description += `> 💫 - **Cantidad de advertencias:** ${warnDb.warns.length} \n> 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>\n\`\`\`\n 🛡️ Selecciona las advertencias a eliminar\`\`\``
         embed.setDescription(description)
-
 
         const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>()
         .setComponents([menu])
 
         console.log(actionRow.toJSON())
 
-        if(options.length = 0) return interaction.editReply({ content: 'Error en crear el array' })
         const reply = await interaction.editReply({ embeds: [embed], components: [actionRow] }).catch((err) => { console.error(err) })
         if(!reply) return
         const response = await reply.awaitMessageComponent({ componentType: ComponentType.StringSelect, time:  240_000 }).catch((err) => {console.error(err)})
