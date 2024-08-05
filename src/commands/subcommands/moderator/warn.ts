@@ -31,6 +31,8 @@ export default new Command({
         const uuid = crypto.randomUUID()
         const shortUuid = uuid.split('-').slice(0, 3).join('-');
 
+        await interaction.reply(`Procesando advertencia ${shortUuid}...`)
+
         if(!warnDb) {
             const newUserWarns = new warns({
                 userId: user.id,
@@ -76,7 +78,7 @@ export default new Command({
                 interaction.channel.send({ content: 'El usuario tiene el MD cerrado' })
             })
     
-            await interaction.reply({ content: `Advertencia enviada a ${user.tag}`})
+            await interaction.editReply({ content: `Advertencia enviada a ${user.tag}`})
         }
 
         warnDb.warns.push({ reason: reason, moderator: interaction.user.id, id: shortUuid })
@@ -120,6 +122,6 @@ export default new Command({
             interaction.channel.send({ content: 'El usuario tiene el MD cerrado' })
         })
 
-        await interaction.reply({ content: `Advertencia enviada a ${user.tag}`})
+        await interaction.editReply({ content: `Advertencia enviada a ${user.tag}`})
     }
 })
