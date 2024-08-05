@@ -39,16 +39,18 @@ export default new Command({
         .setCustomId('warn-remove')
         .setPlaceholder('Selecciona las advertencias a eliminar')
         .setMaxValues(25)
+        .setMinValues(1)
+
         warnDb.warns.forEach(async warn => {
             const moderator = await interaction.guild.members.fetch(warn.moderator)
             description += `> **Advertencia:** ${warn.reason} \n> **Moderador:** ${moderator ? moderator.user.tag : 'Desconocido'} \n> **ID:** ${warn.id} \n\n`
-
+            const option = new StringSelectMenuOptionBuilder()
+            .setLabel(`Advertencia: ${warn.id}`)
+            .setDescription(`Razón: ${warn.reason}`)
+            .setValue(warn.id)
+            .setEmoji('🛡️')
             menu.addOptions(
-                new StringSelectMenuOptionBuilder()
-                .setLabel(`Advertencia: ${warn.id}`)
-                .setDescription(`Razón: ${warn.reason}`)
-                .setValue(warn.id)
-                .setEmoji('🛡️')
+                option
             )
         })
         description += `> 💫 - **Cantidad de advertencias:** ${warnDb.warns.length} \n> 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>\n\`\`\`\n 🛡️ Selecciona las advertencias a eliminar\`\`\``
@@ -56,7 +58,9 @@ export default new Command({
 
 
         const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>()
-        .addComponents(menu)
+        .setComponents([menu])
+
+        console.log(actionRow.toJSON())
 
         if(options.length = 0) return interaction.editReply({ content: 'Error en crear el array' })
         const reply = await interaction.editReply({ embeds: [embed], components: [actionRow] }).catch((err) => { console.error(err) })
