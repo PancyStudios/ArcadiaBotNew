@@ -38,21 +38,23 @@ export default new Command({
         const menu = new StringSelectMenuBuilder()
         .setCustomId('warn-remove')
         .setPlaceholder('Selecciona las advertencias a eliminar')
-        .setMaxValues(25)
+        .setMaxValues(warnDb.warns.length)
+        .setMinValues(1)
 
         await warnDb.warns.forEach(async warn => {
             console.debug(warn)
             const moderator = await interaction.guild.members.fetch(warn.moderator)
             description += `> **Advertencia:** ${warn.reason} \n> **Moderador:** ${moderator ? moderator.user.tag : 'Desconocido'} \n> **ID:** ${warn.id} \n\n`
 
-            const label = `Id: ${warn.id}`.padEnd(25, ' ')
-            const reason = warn.reason.padEnd(25, ' ')
+            const label = `Id: ${warn.id}`.padEnd(80, ' ')
+            const reason = warn.reason.padEnd(100, ' ')
 
             const option = new StringSelectMenuOptionBuilder()
             .setLabel(label)
             .setDescription(reason)
             .setValue(warn.id)
             .setEmoji('🛡️')
+
             menu.addOptions(
                 option
             )
