@@ -22,8 +22,10 @@ export default new Command({
         const user = args.getUser('user')
         const warnDb = await warns.findOne({ guildId: guildId, userId: user.id })
 
+        await interaction.reply('Obteniendo advertencias...')
+
         if(!warnDb || warnDb.warns.length === 0) {
-            return interaction.reply({ content: 'El usuario no tiene advertencias', ephemeral: true })
+            return interaction.editReply({ content: 'El usuario no tiene advertencias' })
         }
         
         const embed = new EmbedBuilder()
@@ -55,7 +57,7 @@ export default new Command({
         const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>()
         .addComponents(menu.addOptions(options))
 
-        const reply = await interaction.reply({ embeds: [embed], components: [actionRow] }).catch(() => {})
+        const reply = await interaction.editReply({ embeds: [embed], components: [actionRow] }).catch(() => {})
         if(!reply) return
         const response = await reply.awaitMessageComponent({ componentType: ComponentType.StringSelect, time:  240_000 }).catch(() => {})
         if(!response) return interaction.editReply({ content: 'Tiempo de espera agotado', components: [] })
