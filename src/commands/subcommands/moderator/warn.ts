@@ -78,7 +78,7 @@ export default new Command({
                 interaction.channel.send({ content: 'El usuario tiene el MD cerrado' })
             })
     
-            await interaction.editReply({ content: `Advertencia enviada a ${user.tag}`})
+            return await interaction.editReply({ content: `Advertencia enviada a ${user.tag}`})
         }
 
         warnDb.warns.push({ reason: reason, moderator: interaction.user.id, id: shortUuid })
