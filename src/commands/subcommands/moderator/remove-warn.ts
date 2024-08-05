@@ -46,6 +46,7 @@ export default new Command({
                 .setValue(warn.id)
                 .setEmoji('🛡️')
             )
+            options = options.slice(0, 24)
         })
         description += `> 💫 - **Cantidad de advertencias:** ${warnDb.warns.length} \n> 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>\n\`\`\`\n 🛡️ Selecciona las advertencias a eliminar\`\`\``
         embed.setDescription(description)
@@ -57,6 +58,7 @@ export default new Command({
         const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>()
         .addComponents(menu.addOptions(options))
 
+        if(options.length = 0) return interaction.editReply({ content: 'Error en crear el array' })
         const reply = await interaction.editReply({ embeds: [embed], components: [actionRow] }).catch((err) => { console.error(err) })
         if(!reply) return
         const response = await reply.awaitMessageComponent({ componentType: ComponentType.StringSelect, time:  240_000 }).catch((err) => {console.error(err)})
