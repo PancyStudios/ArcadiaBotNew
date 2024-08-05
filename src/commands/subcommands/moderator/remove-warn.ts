@@ -57,9 +57,9 @@ export default new Command({
         const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>()
         .addComponents(menu.addOptions(options))
 
-        const reply = await interaction.editReply({ embeds: [embed], components: [actionRow] }).catch(() => {})
+        const reply = await interaction.editReply({ embeds: [embed], components: [actionRow] }).catch((err) => { console.error(err) })
         if(!reply) return
-        const response = await reply.awaitMessageComponent({ componentType: ComponentType.StringSelect, time:  240_000 }).catch(() => {})
+        const response = await reply.awaitMessageComponent({ componentType: ComponentType.StringSelect, time:  240_000 }).catch((err) => {console.error(err)})
         if(!response) return interaction.editReply({ content: 'Tiempo de espera agotado', components: [] })
         const choices = response.values
 
