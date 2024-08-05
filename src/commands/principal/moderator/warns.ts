@@ -49,8 +49,9 @@ export default new Command({
             .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL()})
 
             let description: string = ``
-            warnList.warns.forEach(warn => {
-                description += `> **Advertencia:** ${warn.reason} \n> **Moderador:** ${warn.moderator} \n> **ID:** ${warn.id} \n\n`
+            await warnList.warns.forEach(async warn => {
+                const moderator = await interaction.guild.members.fetch(warn.moderator)
+                description += `> **Advertencia:** ${warn.reason} \n> **Moderador:** ${moderator ? moderator.user.username : 'Desconocido'} \n> **ID:** ${warn.id} \n\n`
             })
             description += `> 💫 - **Cantidad de advertencias:** ${warnList.warns.length} \n> 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>`
             embed.setDescription(description)
@@ -67,7 +68,7 @@ export default new Command({
             .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL()})
 
             let description: string = ``
-            warnList.warns.forEach(async warn => {
+            await warnList.warns.forEach(async warn => {
                 const moderator = await interaction.guild.members.fetch(warn.moderator)
                 description += `> **Advertencia:** ${warn.reason} \n> **Moderador:** ${permissionModeratorView ? (moderator ? moderator.user.tag : 'Desconocido') : 'Oculto'} \n> **ID:** ${warn.id} \n\n`
             })
