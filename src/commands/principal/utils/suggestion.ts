@@ -67,7 +67,7 @@ export default new Command({
             if(!channelId) return interaction.reply({ embeds: [NotChannelEmbed], ephemeral: true })
             
             const channel = interaction.guild.channels.cache.get(channelId) as TextChannel
-            if(!channel) return interaction.reply({ embeds: [NotChannelEmbed], ephemeral: true })
+            if(!channel) return interaction.reply({ embeds: [NotFoundChannelEmbed], ephemeral: true })
 
             const NotPermissionsEmbed = new EmbedBuilder()
             .setTitle('⚠️ | Permisos insuficientes')
