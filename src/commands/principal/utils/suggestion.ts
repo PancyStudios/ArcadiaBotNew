@@ -1,5 +1,12 @@
 import { Command } from "../../../structures/CommandSlashSimple";
-import { EmbedBuilder, ApplicationCommandOptionType, TextChannel, Integration } from "discord.js";
+import { 
+    EmbedBuilder, 
+    TextChannel, 
+    ModalBuilder, 
+    TextInputBuilder, 
+    TextInputStyle, 
+    ActionRowBuilder 
+} from "discord.js";
 import { errorManager } from "../../..";
 import { db } from "../../..";
 import { version } from '../../../../package.json'
@@ -8,17 +15,29 @@ import { SuggestionStatus } from "../../../database/types/Suggestions";
 export default new Command({
     name: 'suggest',
     description: 'Sugiere algo para el servidor',
-    options: [
-        {
-            name: 'sugerencia',
-            description: 'Sugerencia que quieres dar',
-            type: ApplicationCommandOptionType.String,
-            required: true
-        }
-    ],
     
-    run: async ({ interaction, client, args }) => {
-        const suggestionUnfilter = args.getString('sugerencia')
+    run: async ({ interaction, client }) => {
+
+        const SuggestionModal = new ModalBuilder()
+        .setTitle('📩 | Nueva sugerencia')
+        .setCustomId('suggestion')
+
+        const SuggestEntry = new TextInputBuilder()
+        .setCustomId('suggestion_text')
+        .setPlaceholder('Escribe tu sugerencia aquí')
+        .setMinLength(10)
+        .setMaxLength(2000)
+        .setRequired(true)
+        .setStyle(TextInputStyle.Paragraph)
+
+        const ActionRow = new ActionRowBuilder<TextInputBuilder>()
+        .addComponents(SuggestEntry)
+
+        SuggestionModal.addComponents([ActionRow])
+
+        await interaction.showModal(SuggestionModal)
+        const response = await interaction.awaitModalSubmit({ time: 240_000, filter: (i) => i.user.id === interaction.user.id && i.customId === 'suggestion' })
+        const suggestionUnfilter = response.fields.getField('suggestion_text').value
 
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         const suggestion = suggestionUnfilter.replace(urlRegex, '[URL]')
@@ -44,7 +63,9 @@ export default new Command({
 
             const SuggestionEmbed = new EmbedBuilder()
             .setTitle('📩 | Nueva sugerencia')
-            .setDescription(`\`\`\`${suggestion}\`\`\``)
+            .setDescription(`\`\`\`${suggestion}\`\`\`\n\n
+            **Autor:** <@${interaction.user.id}>`)
+
             .setColor('Blue')
             .setTimestamp()
             .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
@@ -64,22 +85,22 @@ export default new Command({
             .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
 
             const channelId = GuildDb?.settings?.suggestions?.suggestionsChannel
-            if(!channelId) return interaction.reply({ embeds: [NotChannelEmbed], ephemeral: true })
+            if(!channelId) return response.reply({ embeds: [NotChannelEmbed], ephemeral: true })
             
             const channel = interaction.guild.channels.cache.get(channelId) as TextChannel
-            if(!channel) return interaction.reply({ embeds: [NotFoundChannelEmbed], ephemeral: true })
+            if(!channel) return response.reply({ embeds: [NotFoundChannelEmbed], ephemeral: true })
 
             const NotPermissionsEmbed = new EmbedBuilder()
             .setTitle('⚠️ | Permisos insuficientes')
             .setDescription('No tengo permisos suficientes para enviar mensajes en el canal de sugerencias, por favor contacta con un administrador para que me los de')
             .setColor('Red')
             .setTimestamp()
-            .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
+            .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
-            if(!channel.permissionsFor(interaction.guild.members.cache.get(client.user.id))?.has('SendMessages')) return interaction.reply({ embeds: [NotPermissionsEmbed], ephemeral: true })
+            if(!channel.permissionsFor(interaction.guild.members.cache.get(client.user.id))?.has('SendMessages')) return response.reply({ embeds: [NotPermissionsEmbed], ephemeral: true })
 
             await channel.send({ embeds: [SuggestionEmbed] })
-            interaction.reply({ embeds: [SuccessEmbed], ephemeral: true })
+            response.reply({ embeds: [SuccessEmbed], ephemeral: true })
         } catch (err) {
             const ErrEmbed = new EmbedBuilder()
             .setTitle('⚠️ | Un error inesperado ha ocurrido')
