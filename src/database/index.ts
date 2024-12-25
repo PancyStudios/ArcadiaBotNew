@@ -12,6 +12,7 @@ import { WarnsDb, warnsSchema } from './types/Warns'
 import { GuildDb, guildSchema } from './types/Guild'
 import { EmbedDb, embedSchema } from './types/Embed'
 import { GlobalConfig, GlobalConfigSchema } from './types/GlobalsConfig'
+import { Suggestions, SuggestionSchema } from './types/Suggestions'
 
 
 export class ArcadiaDb {
@@ -26,6 +27,9 @@ export class ArcadiaDb {
         _id: Types.ObjectId;
     }, any>
     global: Model<GlobalConfig, {}, {}, {}, Document<unknown, {}, GlobalConfig> & GlobalConfig & {
+        _id: Types.ObjectId;
+    }, any>
+    suggestions: Model<Suggestions, {}, {}, {}, Document<unknown, {}, Suggestions> & Suggestions & {
         _id: Types.ObjectId;
     }, any>
 
@@ -54,6 +58,7 @@ export class ArcadiaDb {
         this.guilds = model<GuildDb>('guilds', guildSchema)
         this.embeds = model<EmbedDb>('embeds', embedSchema)
         this.global = model<GlobalConfig>('global', GlobalConfigSchema)
+        this.suggestions = model<Suggestions>('suggestions', SuggestionSchema)
     }
 
     getStatusDb() {
