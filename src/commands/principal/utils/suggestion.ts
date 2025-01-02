@@ -24,14 +24,14 @@ export default new Command({
             .setDescription('El canal de sugerencias no ha sido establecido en este servidor, por favor contacta con un administrador para que lo establezca')
             .setColor('Red')
             .setTimestamp()
-            .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
+            .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
             const NotFoundChannelEmbed = new EmbedBuilder()
             .setTitle('⚠️ | Canal de sugerencias no encontrado')
             .setDescription('El canal de sugerencias establecido no ha sido encontrado, por favor contacta con un administrador para que lo establezca de nuevo')
             .setColor('Red')
             .setTimestamp()
-            .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
+            .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
             const channelId = GuildDb?.settings?.suggestions?.suggestionsChannel
             if(!channelId) return interaction.reply({ embeds: [NotChannelEmbed], ephemeral: true })
@@ -47,7 +47,7 @@ export default new Command({
             .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
             if(!channel.permissionsFor(interaction.guild.members.cache.get(client.user.id))?.has('SendMessages')) return interaction.reply({ embeds: [NotPermissionsEmbed], ephemeral: true })
-                
+
             const SuggestionModal = new ModalBuilder()
             .setTitle('📩 | Nueva sugerencia')
             .setCustomId('suggestion')
@@ -86,16 +86,17 @@ export default new Command({
 
             const SuccessEmbed = new EmbedBuilder()
             .setTitle('✅ | Sugerencia enviada')
-            .setDescription(`Tu sugerencia ha sido enviada correctamente\n\n\`\`\`${suggestion}\`\`\``)
+            .setDescription(`Tu sugerencia ha sido enviada correctamente\n\`\`\`${suggestion}\`\`\``)
             .setColor('Green')
             .setTimestamp()
             .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
 
             const SuggestionEmbed = new EmbedBuilder()
             .setTitle('📩 | Nueva sugerencia')
-            .setDescription(`\`\`\`${suggestion}\`\`\`\n\n
-            **Autor:** <@${interaction.user.id}>`)
-
+            .setDescription(`\`\`\`${suggestion}\`\`\`
+            📝 - **Estado:** \`Pendiente\`
+            📅 - **Fecha:** \`${new Date().toLocaleDateString()}\`
+            👤 - **Autor:** <@${interaction.user.id}>`)
             .setColor('Blue')
             .setTimestamp()
             .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
