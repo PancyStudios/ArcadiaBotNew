@@ -67,12 +67,12 @@ export class ArcadiaDb {
 
     getStatusDbString() {
         const status = this.getStatusDb()
-        if(status === ConnectionStates.connected) return ' | Conectada'
-        if(status === ConnectionStates.connecting) return ' | Conectando'
-        if(status === ConnectionStates.disconnected) return ' | Desconectado'
-        if(status === ConnectionStates.disconnecting) return ' | Desconectando'
-        if(status === ConnectionStates.uninitialized) return ' | No inicializada'
-        return ' | Estado desconocido'
+        if(status === ConnectionStates.connected) return '🟢 | Conectada'
+        if(status === ConnectionStates.connecting) return '🟡 | Conectando'
+        if(status === ConnectionStates.disconnected) return '🔴 | Desconectado'
+        if(status === ConnectionStates.disconnecting) return '🟠 | Desconectando'
+        if(status === ConnectionStates.uninitialized) return '⚫ | No inicializada'
+        return '🟣 | Estado desconocido'
     }
 
     async disconnect() {

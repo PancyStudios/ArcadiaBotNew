@@ -19,7 +19,6 @@ import { CommandType } from "../typings/SlashCommand";
 import { CommandType as CommandTypeSub } from "../typings/SlashSubCommands";
 import { RegisterCommandsOptions } from "../typings/Client";
 import { MenuType } from "../typings/Menu";
-import { get } from "mongoose";
 
 const globPromise = promisify(glob);
 
