@@ -131,7 +131,7 @@ export default new Command({
             .addComponents(Menu)
 
             const messageLast = await response.reply({ embeds: [SuccessEmbed], components: [ActionRow2], ephemeral: true })
-            data.messageId = message.id
+            data.messageId = messageLast.id
             await data.save()
             console.debug(`Suggestion created: ${data._id}`)
         } catch (err) {
@@ -142,7 +142,7 @@ export default new Command({
             .setTimestamp()
             .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
 
-            interaction.reply({ embeds: [ErrEmbed], ephemeral: true })
+            interaction.isRepliable() ? interaction.editReply({ embeds: [ErrEmbed]}) : interaction.reply({ embeds: [ErrEmbed], ephemeral: true })
             errorManager.reportError(err, 'src/commands/principal/utils/suggestion.ts')
         }
     }

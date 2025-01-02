@@ -13,6 +13,10 @@ let errors = 0;
 function securityText(message: string): string {
     let messageStr = typeof message === 'string' ? message : JSON.stringify(message, null, 2);
     messageStr = messageStr.replace(process.env.botToken, '[Secret Token]');
+    messageStr = messageStr.replace(process.env.mongooseDbUrl, '[Secret MongoURL]');
+    messageStr = messageStr.replace(process.env.errorWebhook, '[Secret ErrorWebhook]');
+    messageStr = messageStr.replace(process.env.loggerlogWebhook, '[Secret LoggerLogWebhook]');
+    messageStr = messageStr.replace(process.env.mongooseDbPassword, '[Secret MongoPassword]');
     return messageStr;
 }
 
@@ -61,7 +65,7 @@ function discordLogger(type: string, message: string, prefix: string) {
                 .setTitle(`${type} | ${prefix ? prefix : 'SYS'}`)
                 .setDescription(`\`\`\`bash\n${typeof message === 'string' ? message : 'ErrorTextInput'}\`\`\``)
                 .setTimestamp()
-                .setFooter({ text: `💫 - By PancyStudios`, });
+                .setFooter({ text: `💫 - PancyStudios | Node: ${process.version}`, });
 
             loggerWebhook?.send({ embeds: [embed] }).catch(err => {
                 const error = err as Error
@@ -76,7 +80,7 @@ function discordLogger(type: string, message: string, prefix: string) {
                 .setTitle(`${type} | ${prefix ? prefix : 'SYS'}`)
                 .setDescription(`\`\`\`bash\n${message}\`\`\``)
                 .setTimestamp()
-                .setFooter({ text: `💫 - By PancyStudios`, });
+                .setFooter({ text: `💫 - PancyStudios | Node: ${process.env}`, });
 
             errorWebhook?.send({ embeds: [errorEmbed] }).catch(err => {
                 const error = err as Error
