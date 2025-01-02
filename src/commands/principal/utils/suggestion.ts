@@ -82,7 +82,9 @@ export default new Command({
                 lastAction: 'none',
                 lastAdminId: client.user.id,
                 status: SuggestionStatus.Pending,
-                date: new Date()
+                date: new Date(),
+                upVotes: 0,
+                downVotes: 0
             })
 
             const SuccessEmbed = new EmbedBuilder()
