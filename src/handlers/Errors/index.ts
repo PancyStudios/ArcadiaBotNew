@@ -25,13 +25,13 @@ export class ErrorHandler {
     }
 
     reportError(err: string, origin: string) {
-        const webhook = new WebhookClient({ url: process.env.errorWebhook });
+        const webhook = new WebhookClient({ url: process.env.loggerErrorWebhook });
         const EmbedError = new EmbedBuilder()
         .setTitle('⚠️ | Un error inesperado ha ocurrido')
         .setDescription(`Algo ha salido mal\n\nError: \`${err}\`\nOrigen: \`${origin}\``)
         .setColor('Red')
         .setTimestamp()
-        .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
+        .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
         webhook.send({ embeds: [EmbedError], content: 'Este mensaje fue generado automaticamente' });
     }
