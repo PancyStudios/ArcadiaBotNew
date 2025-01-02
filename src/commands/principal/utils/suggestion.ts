@@ -140,10 +140,10 @@ export default new Command({
             .setDescription(`Algo ha salido mal al intentar mandar tu sugerencia\n\nError: \`${err}\`\n\n\`\`\`⚒️ El error a sido reportado automaticamente, intente de nuevo más tarde\`\`\``)
             .setColor('Red')
             .setTimestamp()
-            .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
+            .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
-            interaction.isRepliable() ? interaction.editReply({ embeds: [ErrEmbed]}) : interaction.reply({ embeds: [ErrEmbed], ephemeral: true })
-            errorManager.reportError(err, 'src/commands/principal/utils/suggestion.ts')
+            interaction.isRepliable() ? interaction.channel.send({ embeds: [ErrEmbed]}) : interaction.reply({ embeds: [ErrEmbed], ephemeral: true })
+            errorManager.reportError(`${err}`, 'src/commands/principal/utils/suggestion.ts')
         }
     }
 })
