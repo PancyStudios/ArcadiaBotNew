@@ -46,6 +46,7 @@ export default new Command({
             if(globalDb) {
                 const warnDb2 = await warns.findOne({ guildId: guildId, userId: user.id })
                 const channelId = globalDb.WarnsGlobalRegister
+                if(!channelId) return await interaction.editReply({ content: 'No se ha establecido un canal de registro de advertencias global' })
                 const channel = await client.channels.fetch(channelId) as TextChannel;
                 
                 const embedLog = new EmbedBuilder()

@@ -7,7 +7,10 @@ export type Suggestions = {
     lastAction: string,
     suggestion: string,
     status: SuggestionStatus,
-    date: Date
+    date: Date,
+    upVotes: number,
+    downVotes: number
+    messageId: string
 }
 
 export const SuggestionSchema = new Schema({
@@ -17,7 +20,10 @@ export const SuggestionSchema = new Schema({
     lastAction: { type: SchemaTypes.String, required: false },
     suggestion: { type: SchemaTypes.String, required: true },
     status: { type: SchemaTypes.Number, required: true },
-    date: { type: SchemaTypes.Date, required: true }
+    date: { type: SchemaTypes.Date, required: true },
+    upVotes: { type: SchemaTypes.Number, required: true },
+    downVotes: { type: SchemaTypes.Number, required: true },
+    messageId: { type: SchemaTypes.String, required: false }
 })
 
 export enum SuggestionStatus {

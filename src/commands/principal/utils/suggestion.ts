@@ -5,7 +5,8 @@ import {
     ModalBuilder, 
     TextInputBuilder, 
     TextInputStyle, 
-    ActionRowBuilder 
+    ActionRowBuilder, 
+    StringSelectMenuBuilder
 } from "discord.js";
 import { errorManager } from "../../..";
 import { db } from "../../..";
@@ -74,7 +75,7 @@ export default new Command({
             const suggestion = suggestionUnfilter.replace(urlRegex, '[URL]')
 
 
-            await db.suggestions.create({
+            const data = await db.suggestions.create({
                 authorId: interaction.user.id,
                 suggestion: suggestion,
                 guildId: interaction.guildId,
@@ -96,13 +97,43 @@ export default new Command({
             .setDescription(`\`\`\`${suggestion}\`\`\`
             📝 - **Estado:** \`Pendiente\`
             📅 - **Fecha:** \`${new Date().toLocaleDateString()}\`
-            👤 - **Autor:** <@${interaction.user.id}>`)
+            👤 - **Autor:** <@${interaction.user.id}>
+            
+            📊 - **Votos:**
+            🔼 - **A favor:** \`0\`
+            🔽 - **En contra:** \`0\``)
             .setColor('Blue')
             .setTimestamp()
             .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
 
-            await channel.send({ embeds: [SuggestionEmbed] })
-            response.reply({ embeds: [SuccessEmbed], ephemeral: true })
+            const message = await channel.send({ embeds: [SuggestionEmbed] })
+            await message.react('🔼')
+            await message.react('🔽')
+            const Menu = new StringSelectMenuBuilder()
+            .setCustomId('suggest')
+            .setPlaceholder('Selecciona una opción')
+            .addOptions([
+                {
+                    label: 'Cambiar estado de la sugerencia',
+                    value: 'change_status',
+                    description: 'Cambia el estado de la sugerencia',
+                    emoji: '🔄'
+                },
+                {
+                    label: 'Eliminar sugerencia',
+                    value: 'delete_suggestion',
+                    description: 'Elimina la sugerencia',
+                    emoji: '❌'
+                }
+            ])
+
+            const ActionRow2 = new ActionRowBuilder<StringSelectMenuBuilder>()
+            .addComponents(Menu)
+
+            const messageLast = await response.reply({ embeds: [SuccessEmbed], components: [ActionRow2], ephemeral: true })
+            data.messageId = message.id
+            await data.save()
+            console.debug(`Suggestion created: ${data._id}`)
         } catch (err) {
             const ErrEmbed = new EmbedBuilder()
             .setTitle('⚠️ | Un error inesperado ha ocurrido')
