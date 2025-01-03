@@ -1,6 +1,7 @@
 import { Command } from "../../../structures/CommandSlashSimple"
 import { db } from "../../.."
 import { EmbedBuilder } from "discord.js"
+
 export default new Command({
     name: 'ping',
     description: 'Muestra la latencia del bot',

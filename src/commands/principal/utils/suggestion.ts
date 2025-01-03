@@ -106,33 +106,34 @@ export default new Command({
             🔽 - **En contra:** \`0\``)
             .setColor('Blue')
             .setTimestamp()
-            .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
+            .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
-            const message = await channel.send({ embeds: [SuggestionEmbed] })
-            await message.react('🔼')
-            await message.react('🔽')
             const Menu = new StringSelectMenuBuilder()
             .setCustomId('suggest')
             .setPlaceholder('Selecciona una opción')
             .addOptions([
                 {
-                    label: 'Cambiar estado de la sugerencia',
+                    label: 'Abrir menu administrativo',
                     value: 'change_status',
-                    description: 'Cambia el estado de la sugerencia',
-                    emoji: '🔄'
+                    description: 'Abre el menu para aprobar/rechazar/marcar [STAFF ONLY]',
+                    emoji: '🔧'
                 },
                 {
                     label: 'Eliminar sugerencia',
                     value: 'delete_suggestion',
-                    description: 'Elimina la sugerencia',
+                    description: 'Elimina la sugerencia [AUTHOR ONLY / STAFF ONLY]',
                     emoji: '❌'
-                }
+                },
             ])
 
             const ActionRow2 = new ActionRowBuilder<StringSelectMenuBuilder>()
             .addComponents(Menu)
 
-            const messageLast = await response.reply({ embeds: [SuccessEmbed], components: [ActionRow2], ephemeral: true })
+
+            const message = await channel.send({ embeds: [SuggestionEmbed], components: [ActionRow2] })
+            await message.react('🔼')
+            await message.react('🔽')
+            const messageLast = await response.reply({ embeds: [SuccessEmbed], ephemeral: true })
             data.messageId = messageLast.id
             await data.save()
             console.debug(`Suggestion created: ${data._id}`)
