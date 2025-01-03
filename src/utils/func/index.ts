@@ -96,7 +96,6 @@ export function textChange(text: string, member?: GuildMember, guild?: Guild) {
         returnText = text.replaceAll(/{member.user.iconUrl}/g, member.user.avatarURL())
         returnText = text.replaceAll(/{member.iconUrl}/g, member.displayAvatarURL())
         returnText = text.replace(/{member.id}/g, member.id)
-
     }
     if(guild) {
         returnText = text.replaceAll(/{guild}/g, guild.toString())

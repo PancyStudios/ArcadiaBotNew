@@ -4,7 +4,6 @@ import {
     PermissionResolvable,
     AutocompleteInteraction,
     CommandInteractionOptionResolver,
-    ApplicationCommandData,
     ApplicationCommandSubCommandData,
     ApplicationCommandOptionType,
 } from 'discord.js';
@@ -50,6 +49,7 @@ export type CommandType = {
     type: ApplicationCommandOptionType.Subcommand;
     userPermissions?: PermissionResolvable[];
     botPermissions?: PermissionResolvable[];
+    isBeta?: boolean;
     run: RunFunction;
     auto?: AutocompleteFunction;
 } & ApplicationCommandSubCommandData;

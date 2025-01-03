@@ -46,6 +46,7 @@ type AutocompleteFunction = (options: AutocompleteOptions) => any;
 export type CommandType = {
     userPermissions?: PermissionResolvable[];
     botPermissions?: PermissionResolvable[];
+    isBeta?: boolean;
     run: RunFunction;
     auto?: AutocompleteFunction;
 } & ApplicationCommandData;
