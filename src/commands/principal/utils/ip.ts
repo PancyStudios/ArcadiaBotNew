@@ -10,7 +10,7 @@ export default new Command({
         const embed = new EmbedBuilder()
         .setTitle('📶 | IP del servidor')
         .setDescription(`🌐 - IP: \`arcadianetwork.ddns.net\`
-        🛜 - PUERTO: \`19192\`
+        🛜 - PUERTO: \`19132\`
         📶 - Versión: \`1.21.50\`
         
         📩 - **Nota:** \`El servidor es unicamente minecraft bedrock\``)

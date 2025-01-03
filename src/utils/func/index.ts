@@ -108,6 +108,5 @@ export function textChange(text: string, member?: GuildMember, guild?: Guild) {
         returnText = text.replaceAll(/{guild.members_size}/g, guild.members.cache.size.toString())
         returnText = text.replaceAll(/{guild.iconUrl}/g, guild.iconURL())
     }
-
     return returnText;
 }
