@@ -1,6 +1,6 @@
 {
   "name": "arcadia",
-  "version": "0.0.3",
+  "version": "beta-2.0.0",
   "main": "src/index.ts",
   "repository": "https://github.com/PancyStudios/ArcadiaBotNew.git",
   "author": "ImTurbis",
