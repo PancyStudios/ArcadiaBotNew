@@ -16,6 +16,7 @@ import { SuggestionStatus } from "../../../database/types/Suggestions";
 export default new Command({
     name: 'suggest',
     description: 'Sugiere algo para el servidor',
+    isBeta: true,
     
     run: async ({ interaction, client }) => {
         try {
