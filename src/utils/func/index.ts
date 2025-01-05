@@ -90,12 +90,12 @@ export function textChange(text: string, member?: GuildMember, guild?: Guild) {
     if(!text) return null;
     let returnText:string
     if(member) {
-        returnText = text.replace(/{member}/g, member.toString())
-        returnText = text.replace(/{member.user.tag}/g, member.user.tag)
-        returnText = text.replace(/{member.user.name}/g, member.user.username)
+        returnText = text.replaceAll(/{member}/g, member.toString())
+        returnText = text.replaceAll(/{member.user.tag}/g, member.user.tag)
+        returnText = text.replaceAll(/{member.user.name}/g, member.user.username)
         returnText = text.replaceAll(/{member.user.iconUrl}/g, member.user.avatarURL())
         returnText = text.replaceAll(/{member.iconUrl}/g, member.displayAvatarURL())
-        returnText = text.replace(/{member.id}/g, member.id)
+        returnText = text.replaceAll(/{member.id}/g, member.id)
     }
     if(guild) {
         returnText = text.replaceAll(/{guild}/g, guild.toString())

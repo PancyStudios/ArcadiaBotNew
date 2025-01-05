@@ -199,7 +199,15 @@ export default new Command({
         const newEmbed = new embeds({
             name: name,
             guildId: interaction.guildId,
-            embed: embedCreate.toJSON()
+            embed: {
+                title: title,
+                description: description,
+                color: color,
+                thumbnail: { url: thumbnail_url },
+                image: { url: image_url },
+                footer: { text: footer, icon_url: footer_icon_url },
+                author: { name: author, icon_url: author_icon_url },
+            }
         })
         newEmbed.save()
         Modal.reply({ content: `Embed ${name} creado\n\nEsta es la vista previa del embed`, embeds: [embedCreate] })

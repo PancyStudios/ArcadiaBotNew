@@ -1,6 +1,8 @@
 import { EmbedBuilder, ApplicationCommandOptionType, ChannelType, TextChannel } from "discord.js";
 import { Command } from "../../../structures/SubCommandSlash";
 import { db } from "../../..";
+import { isUrl, textChange } from "../../../utils/func";
+import { text } from "express";
 
 export default new Command({
     name: "send",
@@ -45,19 +47,38 @@ export default new Command({
     run: async ({ interaction, args }) => {
         const embedName = args.getString("embed")
         const channel = args.getChannel("channel") as TextChannel
-        const { guildId, guild } = interaction
+        const { guildId, guild, member } = interaction
         const { embeds } = db
         const embedDb = await embeds.findOne({ guildId: guildId, name: embedName })
         if(!embedDb) return interaction.reply({ content: "Embed no encontrado", ephemeral: true })
-        const embed = new EmbedBuilder(embedDb.embed)
+        const embed = embedDb.embed
         
         if(channel) {
             if(channel.permissionsFor(await guild.members.fetchMe())?.has(['SendMessages', 'EmbedLinks'])) {
                 return interaction.reply({ content: "No tengo permisos para enviar mensajes o embeds en ese canal", ephemeral: true })
             }
         }
+        const EmbedSend = new EmbedBuilder({
+            title: embed.title ? textChange(embed.title, member, guild) : null,
+            description: embed.description ? textChange(embed.description, member, guild) : null,
+            color: embed.color,
+            image: embed.image ? {
+                url: isUrl(embed.image.url, member, guild) ? textChange(embed.image.url) : null
+            } : null,
+            thumbnail: embed.thumbnail ? {
+                url: isUrl(embed.thumbnail.url, member, guild) ? textChange(embed.thumbnail.url) : null
+            } : null,  
+            footer: embed.footer ? {
+                text: textChange(embed.footer.text, member, guild),
+                iconURL: isUrl(embed.footer.icon_url, member, guild) ? textChange(embed.footer.icon_url) : null
+            } : null,
+            author: embed.author ? {
+                name: textChange(embed.author.name, member, guild),
+                iconURL: isUrl(embed.author.icon_url, member, guild) ? textChange(embed.author.icon_url) : null
+            } : null,
+        })
 
         channel ? await channel.send({ embeds: [embed] }) : await interaction.channel.send({ embeds: [embed] })
-        interaction.reply({ content: "Embed enviadocon exito", ephemeral: true })
+        interaction.reply({ content: "Embed enviado con exito", ephemeral: true })
     }
 })
