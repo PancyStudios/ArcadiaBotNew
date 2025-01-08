@@ -96,13 +96,13 @@ export default new Command({
                 .setAuthor({ name: `🌙 - Advertencia Eliminada`, url: msg?.url ?? null })
                 .setColor(warnDb2.warns.length >= 7 ? 'Red' :'Yellow')
                 .setDescription(`⚠️ - **Usuario:** ${user.tag} (${user.id})
-                    🔖 - **Recuento de advertencias:** ${warnDb2.warns.length} / 7 ${warnDb2.warns.length >= 7 ? 'El usuario a superado/llegado al limite de advertencias' : ''}
-                    🗑️ - **ID de la advertencia eliminada**: ${id}
-                    
-                    🛡️ - **Moderador:** ${interaction.user.tag} (${interaction.user.id})
-                    ⚒️ - **Accion realizada en:** ${interaction.channel.url}
-    
-                    🕒 - **Fecha:** <t:${Math.floor(Date.now() / 1000)}>`)
+                🔖 - **Recuento de advertencias:** ${warnDb2.warns.length} / 7 ${warnDb2.warns.length >= 7 ? 'El usuario a superado/llegado al limite de advertencias' : ''}
+                🗑️ - **ID de la advertencia eliminada**: ${id}
+                
+                🛡️ - **Moderador:** ${interaction.user.tag} (${interaction.user.id})
+                ⚒️ - **Accion realizada en:** ${interaction.channel.url}
+
+                🕒 - **Fecha:** <t:${Math.floor(Date.now() / 1000)}>`)
                 .setThumbnail(interaction.guild.iconURL())
                 .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: client.user.avatarURL() })
     

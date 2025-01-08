@@ -46,13 +46,12 @@ export default new Command({
         .setAuthor({ name: '🔨 - Softban exitoso', iconURL: user.avatarURL(), url: msgUrl ?? null })
         .setColor('Orange')
         .setDescription(`🍂 Usuario softbaneado: ${user.tag} (${user.id})
-            🍁 Razón: ${reason}
+        🍁 Razón: ${reason}
                 
-            ⚒️ - Acción realizada por: ${interaction.user.username} (${interaction.user.id})
-            🛡️ - Realizado en el canal: ${interaction.channel.url}
+        ⚒️ - Acción realizada por: ${interaction.user.username} (${interaction.user.id})
+        🛡️ - Realizado en el canal: ${interaction.channel.url}
     
-            🕒 - Fecha: <t:${Math.floor(Date.now() / 1000)}>
-        `)
+        🕒 - Fecha: <t:${Math.floor(Date.now() / 1000)}>`)
         .setThumbnail(interaction.guild.iconURL())
         .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.client.user.avatarURL() })
 

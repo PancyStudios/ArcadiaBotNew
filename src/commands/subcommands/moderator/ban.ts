@@ -116,12 +116,12 @@ export default new Command({
         .setAuthor({ name: '🔨 - Baneo exitoso', iconURL: user.avatarURL(), url: msgUrl ?? null })
         .setColor('Orange')
         .setDescription(`🍂 Usuario baneado: ${user.username} (${user.id})
-            🍁 Razón: ${reason}
-            
-            ⚒️ - Acción realizada por: ${interaction.user.username} (${interaction.user.id})
-            🛡️ - Realizado en el canal: ${interaction.channel.url}
+        🍁 Razón: ${reason}
+        
+        ⚒️ - Acción realizada por: ${interaction.user.username} (${interaction.user.id})
+        🛡️ - Realizado en el canal: ${interaction.channel.url}
 
-            🕒 - Fecha: <t:${Math.floor(dateTimestamp)}>`)
+        🕒 - Fecha: <t:${Math.floor(dateTimestamp)}>`)
         .setThumbnail(interaction.guild.iconURL())
         .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.client.user.avatarURL() })
         

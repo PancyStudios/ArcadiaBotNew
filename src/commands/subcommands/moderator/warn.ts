@@ -114,9 +114,9 @@ export default new Command({
         .setTitle('⚠️ - Advertencia recibida')
         .setColor('Yellow')
         .setDescription(`⚒️ - **Servidor:** ${interaction.guild.name} (${interaction.guild.id})
-            🔨 - **Razon:** ${reason}
+        🔨 - **Razon:** ${reason}
 
-            🕒 - **Fecha:** <t:${Math.floor(Date.now() / 1000)}>`)
+        🕒 - **Fecha:** <t:${Math.floor(Date.now() / 1000)}>`)
         .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: client.user.avatarURL() })
 
         await user.send({ embeds: [embedUser] }).catch(() => {

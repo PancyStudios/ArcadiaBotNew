@@ -167,9 +167,9 @@ export default new Command({
             .setTitle('🔇 - Usuario silenciado')
             .setDescription(`El usuario ${user.tag} ha sido silenciado con exito
 
-                > Tiempo: ${textTime} (<t:${Math.floor(Date.now() / 1000) + time}:R>)
-                > Razón: ${reason}
-                > Moderador: ${interaction.user.id}`)
+            > Tiempo: ${textTime} (<t:${Math.floor(Date.now() / 1000) + time}:R>)
+            > Razón: ${reason}
+            > Moderador: ${interaction.user.id}`)
             .setColor('Green')
             .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
 
@@ -177,8 +177,8 @@ export default new Command({
             .setTitle('🔇 - Has sido silenciado')
             .setDescription(`Has sido silenciado en el servidor ${interaction.guild.name}
 
-                > Tiempo: ${textTime} (<t:${Math.floor(Date.now() / 1000) + time}:R>)
-                > Razón: ${reason}`)
+            > Tiempo: ${textTime} (<t:${Math.floor(Date.now() / 1000) + time}:R>)
+            > Razón: ${reason}`)
             .setColor('Orange')
             .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
             

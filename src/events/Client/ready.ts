@@ -70,4 +70,16 @@ export default new Event('ready', async(client) => {
     } catch (err) {
         return console.error(err)
     }
+
+    console.debug('Iniciando recarga de sugerencias')
+    const { suggestions } = db
+    const suggestionsDb = await suggestions.find({})
+    suggestionsDb.forEach(async suggestion => {
+        const { channelId, messageId, _id } = suggestion
+        const channel = await client.channels.fetch(channelId).catch(() => null)
+        if(!channel) return console.warn(`No se encontro el canal de la sugerencia ${_id}`); 
+        const message = await channel.messages.fetch(messageId).catch(() => null)
+        if(!message) return console.warn(`No se encontro el mensaje de la sugerencia ${_id}`);
+        console.debug(`La sugerencia ${_id} ha sido recargada`)
+    })
 })
