@@ -5,7 +5,7 @@ export default new Event('messageCreate', async(message) => {
     if(!message.author.bot) return;
     if(message.channelId !== '1122739604055920713') return;
     const {content} =  message
-    const regex = /\d{2}:\d{2}:\d{2} Server\|INFO > Arcadia RolePlay g>> ([\w\s]+) Ha entrado por primera vez al servidor! Bienvenido!/;
+    const regex = /\d{2}:\d{2}:\d{2} Server\|INFO > Arcadia RolePlay g>> ([\w\s]+) Ha entrado por primera vez al servidor! Bienvenido!/g;
     const channel = await message.guild?.channels.fetch('1165112619645026385').catch(() => null) as TextChannel;
     if (!channel) return;
 
