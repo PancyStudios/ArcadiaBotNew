@@ -23,6 +23,6 @@ export default new Event('messageCreate', async(message) => {
         .setFooter({ text: '💫 - Developed by PancyStudios' })
         .setTimestamp()
 
-        channel.send({ embeds: [EmbedNewUser], content: '<@&901310576687448114> <@&827543069594222612> <@&901306576403591178> <@827542979522461768>'})
+        channel.send({ embeds: [EmbedNewUser], content: '<@&901310576687448114> <@&827543069594222612> <@&901306576403591178> <@&827542979522461768>'})
     }
 })
