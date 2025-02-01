@@ -17,6 +17,7 @@ declare global {
             globalModerationWebhook: string;
             mongooseDbPassword: string;
             mongooseDbUrl: string
+            ipMc: string;
         }
     }
 }

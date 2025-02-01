@@ -21,20 +21,14 @@ export default new Command({
         const embedClearAdv = new EmbedBuilder()
         .setTitle(`🔖 - Lista de advertencias de ${user ? user.username : interaction.user.username}`)
         .setColor('Green')
-        .setDescription(`No se han encontrado advertencias del usuario en este servidor
-            
-            > 💫 - **Cantidad de advertencias:** 0
-            > 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>`)
+        .setDescription(`No se han encontrado advertencias del usuario en este servidor\n\n> 💫 - **Cantidad de advertencias:** 0\n> 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>`)
         .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
 
         
         const embedFind = new EmbedBuilder()
         .setTitle(`🔖 - Lista de advertencias de ${user ? user.username : interaction.user.username}`)
         .setColor('Blue')
-        .setDescription(`Espere un momento en lo que obtenemos las advertencias del usuario...
-            
-            > 💫 - **Cantidad de advertencias:** Desconocido
-            > 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>`)
+        .setDescription(`Espere un momento en lo que obtenemos las advertencias del usuario...\n\n> 💫 - **Cantidad de advertencias:** Desconocido\n> 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>`)
         .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
 
         await interaction.reply({ embeds: [embedFind], ephemeral: true })
