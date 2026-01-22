@@ -1,7 +1,7 @@
-import { Event } from "../../structures/Event";
-import { clientExtend as client, errorManager } from "../..";
+import { Event } from "../../structures/Event.js";
+import { clientExtend as client, errorManager } from "../../index.js";
 import { CommandInteractionOptionResolver, EmbedBuilder, GuildMember } from "discord.js";
-import { ExtendedInteraction } from "../../typings/SlashSubCommands";
+import { ExtendedInteraction } from "../../typings/SlashSubCommands.js";
 
 export default new Event('interactionCreate', async(interaction) => { 
     if(interaction.isCommand()) {

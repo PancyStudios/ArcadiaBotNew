@@ -1,7 +1,7 @@
-import { clientExtend as client} from "../..";
-import { Event } from "../../structures/Event"
+import { clientExtend as client} from "../../index.js";
+import { Event } from "../../structures/Event.js"
 import { EmbedBuilder, GuildMemberRoleManager } from "discord.js";
-import { db } from "../..";
+import { db } from "../../index.js";
 
 export default new Event('interactionCreate', (interaction) => {
     if(!interaction.isButton()) return;

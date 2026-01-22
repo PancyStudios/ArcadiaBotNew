@@ -1,4 +1,4 @@
-import { Command } from "../../../structures/SubCommandSlash";
+import { Command } from "../../../structures/SubCommandSlash.js";
 import { ApplicationCommandOptionType, Embed, EmbedBuilder } from "discord.js";
 
 export default new Command({

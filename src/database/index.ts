@@ -8,12 +8,12 @@ import {
     connection,
     ConnectionStates
 } from 'mongoose'
-import { WarnsDb, warnsSchema } from './types/Warns'
-import { GuildDb, guildSchema } from './types/Guild'
-import { EmbedDb, embedSchema } from './types/Embed'
-import { GlobalConfig, GlobalConfigSchema } from './types/GlobalsConfig'
-import { Suggestions, SuggestionSchema } from './types/Suggestions'
-import { UserGuild, UserSchema} from "./types/Users";
+import { WarnsDb, warnsSchema } from './types/Warns.js'
+import { GuildDb, guildSchema } from './types/Guild.js'
+import { EmbedDb, embedSchema } from './types/Embed.js'
+import { GlobalConfig, GlobalConfigSchema } from './types/GlobalsConfig.js'
+import { Suggestions, SuggestionSchema } from './types/Suggestions.js'
+import { UserGuild, UserSchema} from "./types/Users.js";
 
 
 export class ArcadiaDb {

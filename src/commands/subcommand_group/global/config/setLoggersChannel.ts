@@ -1,6 +1,6 @@
-import { Command } from "../../../../structures/SubCommandSlash";
+import { Command } from "../../../../structures/SubCommandSlash.js";
 import { ApplicationCommandOptionType, ChannelType, TextChannel, EmbedBuilder } from "discord.js";
-import { db } from "../../../..";
+import { db } from "../../../../index.js";
 
 export default new Command({
     name: 'logger_setchannel',

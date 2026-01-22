@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { Command } from '../../../structures/CommandSlashSimple'
-import { Status, StatusOnline } from '../../../typings/Status'
+import { Command } from '../../../structures/CommandSlashSimple.js'
+import { Status, StatusOnline } from '../../../typings/Status.js'
 import { EmbedBuilder } from 'discord.js'
 
 export default new Command({

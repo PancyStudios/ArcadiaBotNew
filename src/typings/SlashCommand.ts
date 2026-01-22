@@ -6,7 +6,7 @@ import {
     CommandInteractionOptionResolver,
     ApplicationCommandData,
 } from 'discord.js';
-import { ExtendedClient } from '../structures/Client';
+import { ExtendedClient } from '../structures/Client.js';
 
 /**
  * {

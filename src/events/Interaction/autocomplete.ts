@@ -1,7 +1,7 @@
-import { Event } from "../../structures/Event";
-import { clientExtend as client } from "../..";
+import { Event } from "../../structures/Event.js";
+import { clientExtend as client } from "../../index.js";
 import { CommandInteractionOptionResolver } from "discord.js";
-import { ExtendedInteractionAuto } from "../../typings/SlashSubCommands";
+import { ExtendedInteractionAuto } from "../../typings/SlashSubCommands.js";
 
 export default new Event('interactionCreate', async(interaction) => { 
     if(interaction.isAutocomplete()) {

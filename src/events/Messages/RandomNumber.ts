@@ -1,5 +1,5 @@
-import { Event } from '../../structures/Event';
-import {db} from "../../index";
+import { Event } from '../../structures/Event.js';
+import {db} from "../../index.js";
 
 export default new Event('messageCreate', async (message) => {
 		if (message.author.bot) return;

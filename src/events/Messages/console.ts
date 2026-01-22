@@ -1,4 +1,4 @@
-import { Event } from "../../structures/Event";
+import { Event } from "../../structures/Event.js";
 import { EmbedBuilder, TextChannel } from "discord.js";
 
 export default new Event('messageCreate', async(message) => {

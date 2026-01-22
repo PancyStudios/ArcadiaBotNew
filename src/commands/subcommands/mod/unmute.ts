@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType, GuildMember, EmbedBuilder } from "discord.js";
-import { Command } from "../../../structures/SubCommandSlash";
+import { Command } from "../../../structures/SubCommandSlash.js";
 
 export default new Command({
     name: 'unmute',
