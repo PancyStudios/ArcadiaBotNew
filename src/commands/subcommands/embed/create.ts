@@ -1,13 +1,13 @@
 import { Command } from "../../../structures/SubCommandSlash";
-import { 
-    ApplicationCommandOptionType, 
+import {
+    ApplicationCommandOptionType,
     EmbedBuilder,
     ActionRowBuilder,
     ModalBuilder,
     TextInputBuilder,
     resolveColor,
     TextInputStyle,
-    ColorResolvable
+    ColorResolvable, LabelBuilder
 } from "discord.js";
 import { db } from "../../..";
 import { textChange, isUrl } from "../../../utils/func";
@@ -110,54 +110,54 @@ export default new Command({
 
         const TitleInput = new TextInputBuilder()
         .setCustomId('title')
-        .setLabel('Titulo del embed')
         .setStyle(TextInputStyle.Short)
         .setMaxLength(256)
         .setRequired(false)
 
         const DescriptionInput = new TextInputBuilder()
         .setCustomId('description')
-        .setLabel('Descripcion del embed')
         .setStyle(TextInputStyle.Paragraph)
         .setRequired(true)
 
         const AuthorInput = new TextInputBuilder()
         .setCustomId('author')
-        .setLabel('Autor del embed')
         .setStyle(TextInputStyle.Short)
         .setMaxLength(256)
         .setRequired(false)
 
         const FooterInput = new TextInputBuilder()
         .setCustomId('footer')
-        .setLabel('Footer del embed')
         .setStyle(TextInputStyle.Short)
         .setMaxLength(256)
         .setRequired(false)
 
         const ImageUrl = new TextInputBuilder()
         .setCustomId('image_url')
-        .setLabel('URL de la imagen del embed')
         .setStyle(TextInputStyle.Short)
         .setMaxLength(256)
         .setRequired(false)
 
-        const TitleRow = new ActionRowBuilder<TextInputBuilder>()
-        .setComponents(TitleInput)
+        const TitleLabel = new LabelBuilder()
+        .setLabel('Título')
+        .setTextInputComponent(TitleInput)
 
-        const DescriptionRow = new ActionRowBuilder<TextInputBuilder>()
-        .setComponents(DescriptionInput)
+        const DescriptionLabel = new LabelBuilder()
+        .setLabel('Descripción')
+        .setTextInputComponent(DescriptionInput)
+        const AuthorLabel = new LabelBuilder()
+        .setLabel('Autor')
+        .setTextInputComponent(AuthorInput)
 
-        const AuthorRow = new ActionRowBuilder<TextInputBuilder>()
-        .setComponents(AuthorInput)
+        const FooterLabel = new LabelBuilder()
+        .setLabel('Footer')
+        .setTextInputComponent(FooterInput)
 
-        const FooterRow = new ActionRowBuilder<TextInputBuilder>()
-        .setComponents(FooterInput)
+        const ImageLabel = new LabelBuilder()
+        .setLabel('URL de la imagen')
+        .setTextInputComponent(ImageUrl)
 
-        const ImageRow = new ActionRowBuilder<TextInputBuilder>()
-        .setComponents(ImageUrl)
 
-        ModalCreate.setComponents([TitleRow, DescriptionRow, AuthorRow, FooterRow, ImageRow])
+        ModalCreate.addLabelComponents([TitleLabel, DescriptionLabel, AuthorLabel, FooterLabel, ImageLabel])
 
         await interaction.showModal(ModalCreate)
 
@@ -166,14 +166,14 @@ export default new Command({
         })
         if(!Modal) return
 
-        let title = Modal.fields.getField('title').value
+        let title = Modal.fields.getTextInputValue('title')
         if(title === "") title = null
-        const description = Modal.fields.getField('description').value
-        let author = Modal.fields.getField('author').value
+        const description = Modal.fields.getTextInputValue('description')
+        let author = Modal.fields.getTextInputValue('author')
         if(author === "") author = null
-        let footer = Modal.fields.getField('footer').value
+        let footer = Modal.fields.getTextInputValue('footer')
         if(footer === "") footer = null
-        let image_url = Modal.fields.getField('image_url').value
+        let image_url = Modal.fields.getTextInputValue('image_url')
         if(image_url === "") image_url = null
 
         const thumbnail_url = args.getString('thumbnail_url')

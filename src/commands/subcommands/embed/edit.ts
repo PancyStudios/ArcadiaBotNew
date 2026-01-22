@@ -1,6 +1,16 @@
 import { Command } from '../../../structures/SubCommandSlash';
 import { db } from '../../..';
-import { ApplicationCommandOptionType, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ColorResolvable, resolveColor, EmbedBuilder } from 'discord.js';
+import {
+    ApplicationCommandOptionType,
+    ActionRowBuilder,
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle,
+    ColorResolvable,
+    resolveColor,
+    EmbedBuilder,
+    LabelBuilder
+} from 'discord.js';
 import { isUrl, textChange } from '../../../utils/func';
 import hexColorRegex from 'hex-color-regex';
 
@@ -147,7 +157,6 @@ export default new Command({
 
             const TitleInput = new TextInputBuilder()
                 .setCustomId('title')
-                .setLabel('Titulo del embed')
                 .setStyle(TextInputStyle.Short)
                 .setMaxLength(256)
                 .setRequired(false)
@@ -155,14 +164,12 @@ export default new Command({
 
             const DescriptionInput = new TextInputBuilder()
                 .setCustomId('description')
-                .setLabel('Descripcion del embed')
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(true)
                 .setValue(embedDb.embed.description ?? null)
 
             const AuthorInput = new TextInputBuilder()
                 .setCustomId('author')
-                .setLabel('Autor del embed')
                 .setStyle(TextInputStyle.Short)
                 .setMaxLength(256)
                 .setRequired(false)
@@ -170,7 +177,6 @@ export default new Command({
 
             const FooterInput = new TextInputBuilder()
                 .setCustomId('footer')
-                .setLabel('Footer del embed')
                 .setStyle(TextInputStyle.Short)
                 .setMaxLength(256)
                 .setRequired(false)
@@ -178,28 +184,32 @@ export default new Command({
 
             const ImageUrl = new TextInputBuilder()
                 .setCustomId('image_url')
-                .setLabel('URL de la imagen del embed')
                 .setStyle(TextInputStyle.Short)
                 .setMaxLength(256)
                 .setRequired(false)
                 .setValue(embedDb.embed.image.url ?? null)
 
-            const TitleRow = new ActionRowBuilder<TextInputBuilder>()
-                .setComponents(TitleInput)
 
-            const DescriptionRow = new ActionRowBuilder<TextInputBuilder>()
-                .setComponents(DescriptionInput)
+            const TitleLabel = new LabelBuilder()
+              .setLabel('Título')
+              .setTextInputComponent(TitleInput)
 
-            const AuthorRow = new ActionRowBuilder<TextInputBuilder>()
-                .setComponents(AuthorInput)
+            const DescriptionLabel = new LabelBuilder()
+              .setLabel('Descripción')
+              .setTextInputComponent(DescriptionInput)
+            const AuthorLabel = new LabelBuilder()
+              .setLabel('Autor')
+              .setTextInputComponent(AuthorInput)
 
-            const FooterRow = new ActionRowBuilder<TextInputBuilder>()
-                .setComponents(FooterInput)
+            const FooterLabel = new LabelBuilder()
+              .setLabel('Footer')
+              .setTextInputComponent(FooterInput)
 
-            const ImageRow = new ActionRowBuilder<TextInputBuilder>()
-                .setComponents(ImageUrl)
+            const ImageLabel = new LabelBuilder()
+              .setLabel('URL de la imagen')
+              .setTextInputComponent(ImageUrl)
 
-            ModalEdit.setComponents([TitleRow, DescriptionRow, AuthorRow, FooterRow, ImageRow])
+            ModalEdit.addLabelComponents([TitleLabel, DescriptionLabel, AuthorLabel, FooterLabel, ImageLabel])
 
             await interaction.showModal(ModalEdit)
 
@@ -208,16 +218,15 @@ export default new Command({
             })
             if (!Modal) return
 
-            let title = Modal.fields.getField('title').value
-            if (title === "") title = null
-            let description = Modal.fields.getField('description').value
-            if (description === "") description = null
-            let author = Modal.fields.getField('author').value
-            if (author === "") author = null
-            let footer = Modal.fields.getField('footer').value
-            if (footer === "") footer = null
-            let image_url = Modal.fields.getField('image_url').value
-            if (image_url === "") image_url = null
+            let title = Modal.fields.getTextInputValue('title')
+            if(title === "") title = null
+            const description = Modal.fields.getTextInputValue('description')
+            let author = Modal.fields.getTextInputValue('author')
+            if(author === "") author = null
+            let footer = Modal.fields.getTextInputValue('footer')
+            if(footer === "") footer = null
+            let image_url = Modal.fields.getTextInputValue('image_url')
+            if(image_url === "") image_url = null
 
             if (title) embedDb.embed.title = title
             if (description) embedDb.embed.description = description
