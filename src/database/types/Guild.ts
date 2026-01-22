@@ -83,7 +83,7 @@ export type Status = {
     type: StatusTypes
 }
 
-export const guildSchema = new Schema({
+export const guildSchema = new Schema<GuildDb>({
     guildId: { type: SchemaTypes.String, required: true },
     modules: {
         suggestions: { type: SchemaTypes.Boolean, required: true },
@@ -106,11 +106,18 @@ export const guildSchema = new Schema({
             choices: { type: SchemaTypes.Array, required: false },
             embed: { type: SchemaTypes.String, required: false }
         },
+
         suggestions: {
             adminChannel: { type: SchemaTypes.String, required: false },
             suggestionsChannel: { type: SchemaTypes.String, required: false },
             roleGestion: { type: SchemaTypes.String, required: false },
             topics: { type: SchemaTypes.Array, required: false }
+        },
+        randomNumber: {
+            min: { type: SchemaTypes.Number, required: false },
+            max: { type: SchemaTypes.Number, required: false },
+            channel: { type: SchemaTypes.String, required: false },
+            number: { type: SchemaTypes.Number, required: false }
         },
         welcome: {
             channel: { type: SchemaTypes.String, required: false },

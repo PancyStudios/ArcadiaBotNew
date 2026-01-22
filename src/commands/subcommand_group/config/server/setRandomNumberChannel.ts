@@ -31,10 +31,11 @@ export default new Command({
 					max: 3000,
 					number: null
 				}
+				await Data.save()
 			} else {
 				Data.settings.randomNumber.channel = guildId
+				await Data.save()
 			}
-			await Data.save()
 
 			const EmbedSuccess = new EmbedBuilder()
 				.setTitle('✅ | Canal de números aleatorios establecido')
