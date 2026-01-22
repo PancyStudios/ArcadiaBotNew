@@ -1,12 +1,12 @@
 import { Command } from "../../../structures/CommandSlashSimple";
-import { 
-    EmbedBuilder, 
-    TextChannel, 
-    ModalBuilder, 
-    TextInputBuilder, 
-    TextInputStyle, 
-    ActionRowBuilder, 
-    StringSelectMenuBuilder
+import {
+    EmbedBuilder,
+    TextChannel,
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle,
+    ActionRowBuilder,
+    StringSelectMenuBuilder, LabelBuilder
 } from "discord.js";
 import { errorManager } from "../../..";
 import { db } from "../../..";
@@ -53,24 +53,25 @@ export default new Command({
             const SuggestionModal = new ModalBuilder()
             .setTitle('📩 | Nueva sugerencia')
             .setCustomId('suggestion')
+
     
             const SuggestEntry = new TextInputBuilder()
             .setCustomId('suggestion_text')
-            .setLabel('Sugerencia')
             .setPlaceholder('Escribe tu sugerencia aquí')
             .setMinLength(10)
             .setMaxLength(2000)
             .setRequired(true)
             .setStyle(TextInputStyle.Paragraph)
+
+            const SuggestLabel = new LabelBuilder()
+              .setLabel('Sugerencia')
+              .setTextInputComponent(SuggestEntry);
     
-            const ActionRow = new ActionRowBuilder<TextInputBuilder>()
-            .addComponents(SuggestEntry)
-    
-            SuggestionModal.addComponents([ActionRow])
+            SuggestionModal.addLabelComponents([SuggestLabel])
     
             await interaction.showModal(SuggestionModal)
             const response = await interaction.awaitModalSubmit({ time: 240_000, filter: (i) => i.user.id === interaction.user.id && i.customId === 'suggestion' })
-            const suggestionUnfilter = response.fields.getField('suggestion_text').value
+            const suggestionUnfilter = response.fields.getTextInputValue('suggestion_text')
     
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             const suggestion = suggestionUnfilter.replace(urlRegex, '[URL]')
