@@ -10,12 +10,12 @@ export default new Event('messageCreate', async (message) => {
 	if (!dbGuild) return;
 	if (dbGuild.settings.randomNumber?.channel) {
 		const number = dbGuild.settings.randomNumber?.number
-		if (message.channel.id !== dbGuild.settings.randomNumber.channel) return;
+		if (message.channel.id !== dbGuild.settings.randomNumber?.channel) return;
 		const min = dbGuild.settings.randomNumber?.min || 1;
 		const max = dbGuild.settings.randomNumber?.max || 3000;
 		if (!number) {
 			if(message.content.startsWith('start')) {
-				if(message.author.id !== '') return message.reply({ content: `El juego solo puede iniciarlo @imximef`});
+				if(message.author.id !== '852683369899622430') return message.reply({ content: `El juego solo puede iniciarlo @imximef`});
 				await generateRandomNumber(dbGuild)
 				message.channel.send('🕹️ ¡El juego ha comenzado!');
 				message.channel.send(`🎲 Adivina el número Estoy pensando en un número del ${min} al ${max}. Solo escribe tu apuesta aquí abajo.`);

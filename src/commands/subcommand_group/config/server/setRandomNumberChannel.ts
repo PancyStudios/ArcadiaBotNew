@@ -33,7 +33,7 @@ export default new Command({
 				}
 				await Data.save()
 			} else {
-				Data.settings.randomNumber.channel = guildId
+				Data.settings.randomNumber.channel = channel.id
 				await Data.save()
 			}
 
