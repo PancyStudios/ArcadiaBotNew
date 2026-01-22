@@ -6,15 +6,15 @@ import {Colors, EmbedBuilder} from "discord.js";
 
 export default new Event('messageCreate', async (message) => {
 	if (message.author.bot) return;
-	const dbGuild = await db.guilds.findOne({ id: message.guild.id });
+	const dbGuild = await db.guilds.findOne({ guildId: message.guild.id });
 	if (!dbGuild) return;
 	if (dbGuild.settings.randomNumber?.channel) {
-		const number = dbGuild.settings.randomNumber?.number
+		const number = dbGuild.settings.randomNumber?.number || 0;
 		if (message.channel.id !== dbGuild.settings.randomNumber?.channel) return;
 		const min = dbGuild.settings.randomNumber?.min || 1;
 		const max = dbGuild.settings.randomNumber?.max || 3000;
 		if (!number) {
-			if(message.content.startsWith('start')) {
+			if(message.content.toString().startsWith('start')) {
 				if(message.author.id !== '852683369899622430') return message.reply({ content: `El juego solo puede iniciarlo @imximef`});
 				await generateRandomNumber(dbGuild)
 				message.channel.send('🕹️ ¡El juego ha comenzado!');
@@ -31,8 +31,8 @@ export default new Event('messageCreate', async (message) => {
 						.setThumbnail(message.author.displayAvatarURL())
 						.setDescription(`✨ ¡Tenemos un ganador! <@${message.author.id}> acertó el número secreto: ${number}\n > ${message.author.displayName} +1 win, Ahora cuentas con ${newWin} wins!`)
 						.setColor(Colors.Green)
-						.setFooter({ text: `💫 - Developed by PancyStudios | 🏹 Intentos: ${winnerDb.randomNumberWins}` })
-					message.reply(`¡Felicidades ${message.author}, has adivinado el número ${number}! 🎉`)
+						.setFooter({ text: `💫 - Developed by PancyStudios | 🏹 Intentos: ${winnerDb.randomNumberAttempts}` })
+					message.reply({embeds: [WinnerEmbed]})
 					dbGuild.settings.randomNumber.number = null;
 					await dbGuild.save();
 					if (winnerDb) {
@@ -45,12 +45,12 @@ export default new Event('messageCreate', async (message) => {
 					message.channel.send('🕹️ ¡El juego ha comenzado!');
 					message.channel.send(`🎲 Adivina el número Estoy pensando en un número del ${min} al ${max}. Solo escribe tu apuesta aquí abajo.`);
 				} else if (guessedNumber < number) {
-					await attemptsIncrement(message.author.id);
-					message.react(':x:');
+					await attemptsIncrement(message.author.id, message.guild.id);
+					message.react('❌');
 					message.react('⬆️');
 				} else {
-					await attemptsIncrement(message.author.id);
-					message.react(':x:');
+					await attemptsIncrement(message.author.id, message.guild.id);
+					message.react('❌');
 					message.react('⬇️');
 				}
 			}
@@ -66,13 +66,13 @@ export default new Event('messageCreate', async (message) => {
 	}
 })
 
-async function attemptsIncrement(userId: string) {
+async function attemptsIncrement(userId: string, guildId: string) {
 	const userDb = await db.users.findOne({ userId });
 	if (userDb) {
 		userDb.randomNumberAttempts = (userDb.randomNumberAttempts || 0) + 1;
 		await userDb.save();
 	} else {
-		const newUserDb = new db.users({ userId, randomNumberWins: 0, randomNumberAttempts: 1 });
+		const newUserDb = new db.users({ guildId, userId, randomNumberWins: 0, randomNumberAttempts: 1 });
 		await newUserDb.save();
 	}
 }

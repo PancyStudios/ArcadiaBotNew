@@ -10,5 +10,6 @@ export type UserGuild = {
 export const UserSchema = new Schema({
 		guildId: { type: String, required: true },
 		userId: { type: String, required: true },
-		randomNumberWins: { type: Number, required: true, default: 0 }
+		randomNumberWins: { type: Number, required: true, default: 0 },
+		randomNumberAttempts: { type: Number, required: true, default: 0 }
 })
