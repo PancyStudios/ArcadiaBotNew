@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --loader ts-node/esm src/index.ts",
     "build": "tsc",
-    "start": "node ./build/index.js",
+    "start": "tsx src/index.ts",
     "typecheck": "tsc --noEmit"
   },
   "repository": "https://github.com/PancyStudios/ArcadiaBotNew.git",
@@ -32,6 +32,7 @@
     "@types/luxon": "^3.4.2",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.5.4"
   }
 }
