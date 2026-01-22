@@ -20,7 +20,7 @@ declare global {
             ipMc: string;
             arcadiaPanelUrl: string;
             arcadiaPanelKey: string;
-
+            channelConsole: string;
         }
     }
 }

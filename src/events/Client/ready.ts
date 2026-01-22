@@ -5,9 +5,8 @@ import { clientExtend } from "../..";
 import { db } from "../..";
 import { version } from "../../../package.json";
 
-export default new Event('ready', async(client) => {
+export default new Event('clientReady', async(client) => {
     console.debug(`Bot listo como ${client.user.tag}`);
-
 
     let Activities = [
         {

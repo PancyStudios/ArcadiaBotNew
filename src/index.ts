@@ -1,11 +1,12 @@
 import { config } from 'dotenv'
 config()
 import('./utils/log')
+import { MinecraftConsole} from "./handlers/Console/Minecraft";
 import { ExtendedClient } from './structures/Client'
 import { ErrorHandler } from './handlers/Errors'
-import { ArcadiaDb } from './database'
-import { ServerWeb } from './handlers/Server'
 import ConsoleHandler from './handlers/Console'
+import { ServerWeb } from './handlers/Server'
+import { ArcadiaDb } from './database'
 
 const port = (process.env.serverPort || 3000) as number
 export const consoles = new ConsoleHandler()

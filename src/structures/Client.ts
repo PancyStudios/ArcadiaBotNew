@@ -19,6 +19,7 @@ import { CommandType } from "../typings/SlashCommand";
 import { CommandType as CommandTypeSub } from "../typings/SlashSubCommands";
 import { RegisterCommandsOptions } from "../typings/Client";
 import { MenuType } from "../typings/Menu";
+import { MinecraftConsole } from "../handlers/Console/Minecraft";
 
 const globPromise = promisify(glob);
 
@@ -42,6 +43,7 @@ export class ExtendedClient extends Client {
     menusString: Collection<string, MenuType> = new Collection();
     menuStringDynamic: Collection<string, MenuType> = new Collection();
     botAccessRoleIdCache: Array<string> = [];
+    mcConsole: MinecraftConsole;
 
     constructor() {
         super({ 
@@ -293,13 +295,21 @@ export class ExtendedClient extends Client {
             }
         }   
 
-        this.on("ready", (_) => {
+        this.on("clientReady", (_) => {
             this.registerCommands({
                 commands: slashCommands,
             });
 
             console.debug(`Comandos en total: ${slashCommands.length}`);
             console.warn(`Comandos necesiarios para el limite: ${100 - slashCommands.length}`);
+
+            this.mcConsole = new MinecraftConsole({
+                channelId: process.env.channelConsole,
+                apiKey: process.env.arcadiaPanelKey,
+                panelUrl: process.env.arcadiaPanelUrl,
+                serverUuid: 'b44bb677',
+                discordClient: this
+            });
         });
 
         const eventFiles = await globPromise(

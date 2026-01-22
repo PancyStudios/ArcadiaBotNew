@@ -1,3 +1,4 @@
+
 import { Command } from "../../../../structures/SubCommandSlash";
 import { ApplicationCommandOptionType, ChannelType, EmbedBuilder } from "discord.js";
 import { errorManager } from "../../../..";

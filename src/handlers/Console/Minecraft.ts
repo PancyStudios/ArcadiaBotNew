@@ -1,11 +1,12 @@
-import { Client as DiscordClient, GatewayIntentBits, TextChannel } from 'discord.js';
+import { TextChannel } from 'discord.js';
+import { ExtendedClient } from "../../structures/Client";
 import WebSocket from 'ws';
 
 interface MinecraftConsoleOptions {
 	panelUrl: string;
 	apiKey: string;
 	serverUuid: string;
-	discordClient: DiscordClient;
+	discordClient: ExtendedClient;
 	channelId: string;
 	maxBufferChars?: number;
 	forceSendIntervalMs?: number;
@@ -33,17 +34,15 @@ export class MinecraftConsole {
 			...options,
 		};
 
-		this.options.discordClient.once('ready', () => {
-			const channel = this.options.discordClient.channels.cache.get(this.options.channelId);
-			if (channel instanceof TextChannel) {
-				this.discordChannel = channel;
-				console.log(`[MinecraftConsole] Canal encontrado: #${channel.name}`);
-				this.start();
-			} else {
-				console.error('[MinecraftConsole] Canal no válido:', this.options.channelId);
-			}
-		});
-	}
+		const channel = this.options.discordClient.channels.cache.get(this.options.channelId);
+		if (channel instanceof TextChannel) {
+			this.discordChannel = channel;
+			console.log(`[MinecraftConsole] Canal encontrado: #${channel.name}`);
+			this.start();
+		} else {
+			console.error('[MinecraftConsole] Canal no válido:', this.options.channelId);
+		}
+	};
 
 	private async fetchWebSocketDetails(): Promise<boolean> {
 		try {
@@ -65,10 +64,10 @@ export class MinecraftConsole {
 			this.socketUrl = json.data.socket;
 			this.currentToken = json.data.token;
 
-			console.log('[MinecraftConsole] Token y URL WS frescos obtenidos');
+			console.log('Token y URL WS frescos obtenidos', '[MinecraftConsole]');
 			return true;
 		} catch (err) {
-			console.error('[MinecraftConsole] Error fetching WS:', (err as Error).message);
+			console.error('Error fetching WS: ' + (err as Error).message), '[MinecraftConsole]' ;
 			return false;
 		}
 	}
@@ -88,14 +87,14 @@ export class MinecraftConsole {
 			return;
 		}
 
-		console.log('[MinecraftConsole] Conectando a:', this.socketUrl);
+		console.log('Conectando a: ' + this.socketUrl, '[MinecraftConsole]');
 
 		this.ws = new WebSocket(this.socketUrl, {
 			origin: this.options.panelUrl,
 		});
 
 		this.ws.on('open', () => {
-			console.log('[MinecraftConsole] WS abierto → auth enviada');
+			console.log('WS abierto → auth enviada', '[MinecraftConsole]');
 			this.ws!.send(JSON.stringify({ event: 'auth', args: [this.currentToken] }));
 		});
 
@@ -115,28 +114,28 @@ export class MinecraftConsole {
 						this.sendBuffer();
 					}
 				} else if (msg.event === 'auth success') {
-					console.log('[MinecraftConsole] Auth exitosa');
+					console.log('Auth exitosa', '[MinecraftConsole]');
 				} else if (msg.event === 'token expiring') {
-					console.warn('[MinecraftConsole] Token expiring detectado → refrescando automáticamente');
+					console.warn('Token expiring detectado → refrescando automáticamente','[MinecraftConsole]');
 					this.handleTokenExpiring();
 				} else if (msg.event === 'token expired') {
-					console.warn('[MinecraftConsole] Token expired → reconectando');
+					console.warn('Token expired → reconectando', '[MinecraftConsole]');
 					this.handleTokenExpiring();
 				} else if (msg.event === 'stats') {
 					// Opcional: maneja stats
 				}
 			} catch (err) {
-				console.error('[MinecraftConsole] Error parseando WS msg:', err);
+				console.error('Error parseando WS msg:', '[MinecraftConsole] ');
 			}
 		});
 
 		this.ws.on('error', (err: Error) => {
-			console.error('[MinecraftConsole] WS error:', err.message);
+			console.error('WS error:' + err.message, '[MinecraftConsole]');
 			this.scheduleReconnect();
 		});
 
 		this.ws.on('close', () => {
-			console.log('[MinecraftConsole] WS cerrado → reconectando');
+			console.log('WS cerrado → reconectando', "[MinecraftConsole]");
 			this.scheduleReconnect();
 		});
 	}
@@ -151,7 +150,7 @@ export class MinecraftConsole {
 		if (success) {
 			this.connectWebSocket();
 		} else {
-			console.log('[MinecraftConsole] Falló refresh, reintento en 30s');
+			console.log('Falló refresh, reintento en 30s', "[MinecraftConsole] ");
 			setTimeout(() => this.handleTokenExpiring(), 30000);
 		}
 	}
@@ -171,7 +170,7 @@ export class MinecraftConsole {
 			console.log(`[MinecraftConsole] Enviado: ${this.consoleBuffer.length} chars`);
 			this.lastSentTime = Date.now();
 		} catch (err) {
-			console.error('[MinecraftConsole] Error Discord:', (err as Error).message);
+			console.error('Error Discord:' + (err as Error).message, '[MinecraftConsole]');
 			if ((err as any)?.message?.includes('2000') || (err as any)?.code === 50035) {
 				const chunks = this.splitIntoChunks(this.consoleBuffer, 900);
 				for (const chunk of chunks) {
