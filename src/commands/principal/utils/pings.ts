@@ -1,5 +1,5 @@
-import { Command } from "../../../structures/CommandSlashSimple"
-import { db } from "../../.."
+import { Command } from "../../../structures/CommandSlashSimple.js"
+import { db } from "../../../index.js"
 import { EmbedBuilder } from "discord.js"
 
 export default new Command({

@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ApplicationCommandOptionChoiceData, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, EmbedBuilder, TextChannel } from "discord.js";
-import { Command } from "../../../structures/SubCommandSlash";
-import { db } from "../../..";
+import { Command } from "../../../structures/SubCommandSlash.js";
+import { db } from "../../../index.js";
 
 export default new Command({
     name: 'ban',

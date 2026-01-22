@@ -1,5 +1,5 @@
-import { Event } from "../../structures/Event";
-import {clientExtend as client, db} from "../../index";
+import { Event } from "../../structures/Event.js";
+import {clientExtend as client, db} from "../../index.js";
 import {AuditLogEvent, EmbedBuilder, TextChannel, User} from "discord.js";
 
 export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => {

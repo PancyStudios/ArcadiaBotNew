@@ -1,6 +1,6 @@
-import { Command } from "../../../structures/SubCommandSlash";
+import { Command } from "../../../structures/SubCommandSlash.js";
 import { ApplicationCommandOptionType, EmbedBuilder, TextChannel } from "discord.js";
-import { db } from "../../..";
+import { db } from "../../../index.js";
 
 export default new Command({
     name: 'unban',

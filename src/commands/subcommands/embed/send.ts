@@ -1,7 +1,7 @@
 import { EmbedBuilder, ApplicationCommandOptionType, ChannelType, TextChannel } from "discord.js";
-import { Command } from "../../../structures/SubCommandSlash";
-import { db } from "../../..";
-import { isUrl, textChange } from "../../../utils/func";
+import { Command } from "../../../structures/SubCommandSlash.js";
+import { db } from "../../../index.js";
+import { isUrl, textChange } from "../../../utils/func/index.js";
 import { text } from "express";
 
 export default new Command({

@@ -1,7 +1,7 @@
-import { Event } from "../../structures/Event";
+import { Event } from "../../structures/Event.js";
 import { Embed, EmbedBuilder, GuildMember } from "discord.js";
-import { textChange } from "../../utils/func";
-import { db, errorManager } from "../.."; 
+import { textChange } from "../../utils/func/index.js";
+import { db, errorManager } from "../../index.js"; 
 
 export default new Event('guildMemberAdd', async (member) => {
     const { guild } = member

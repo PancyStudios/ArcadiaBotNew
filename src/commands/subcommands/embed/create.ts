@@ -1,4 +1,4 @@
-import { Command } from "../../../structures/SubCommandSlash";
+import { Command } from "../../../structures/SubCommandSlash.js";
 import { 
     ApplicationCommandOptionType, 
     EmbedBuilder,
@@ -9,8 +9,8 @@ import {
     TextInputStyle,
     ColorResolvable
 } from "discord.js";
-import { db } from "../../..";
-import { textChange, isUrl } from "../../../utils/func";
+import { db } from "../../../index.js";
+import { textChange, isUrl } from "../../../utils/func/index.js";
 import hexColorRegex from "hex-color-regex";
 
 export default new Command({

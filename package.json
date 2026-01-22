@@ -1,7 +1,14 @@
 {
   "name": "arcadia",
   "version": "beta-2.1.0",
-  "main": "src/index.ts",
+  "main": "./build/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "ts-node-dev --loader ts-node/esm src/index.ts",
+    "build": "tsc",
+    "start": "node ./build/index.js",
+    "typecheck": "tsc --noEmit"
+  },
   "repository": "https://github.com/PancyStudios/ArcadiaBotNew.git",
   "author": "ImTurbis",
   "license": "MIT",

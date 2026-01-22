@@ -1,6 +1,6 @@
 import express from 'express'
-import { MainRouter } from './Routes/Main'
-import { TranscriptsRouter } from './Routes/Transcripts'
+import { MainRouter } from './Routes/Main/index.js'
+import { TranscriptsRouter } from './Routes/Transcripts/index.js'
 import { Server, IncomingMessage, ServerResponse } from 'http'
 
 export class ServerWeb {

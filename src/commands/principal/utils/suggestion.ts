@@ -1,4 +1,4 @@
-import { Command } from "../../../structures/CommandSlashSimple";
+import { Command } from "../../../structures/CommandSlashSimple.js";
 import { 
     EmbedBuilder, 
     TextChannel, 
@@ -8,10 +8,10 @@ import {
     ActionRowBuilder, 
     StringSelectMenuBuilder
 } from "discord.js";
-import { errorManager } from "../../..";
-import { db } from "../../..";
-import { version } from '../../../../package.json'
-import { SuggestionStatus } from "../../../database/types/Suggestions";
+import { errorManager } from "../../../index.js";
+import { db } from "../../../index.js";
+import { version } from '../../../../package.json' with { type: "json" }
+import { SuggestionStatus } from "../../../database/types/Suggestions.js";
 
 export default new Command({
     name: 'suggest',

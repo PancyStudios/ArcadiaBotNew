@@ -2,7 +2,7 @@ import {
     ButtonInteraction,
     PermissionResolvable
 } from 'discord.js';
-import { ExtendedClient } from '../structures/Client';
+import { ExtendedClient } from '../structures/Client.js';
 
 /**
  * {

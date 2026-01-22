@@ -1,4 +1,4 @@
-import { CommandType } from "../typings/SlashCommand";
+import { CommandType } from "../typings/SlashCommand.js";
 
 
 export class Command {

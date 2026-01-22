@@ -1,5 +1,5 @@
-import { Command } from "../../../structures/SubCommandSlash";
-import { db } from "../../..";
+import { Command } from "../../../structures/SubCommandSlash.js";
+import { db } from "../../../index.js";
 import { ApplicationCommandOptionType, EmbedBuilder, TextChannel } from "discord.js";
 
 export default new Command({

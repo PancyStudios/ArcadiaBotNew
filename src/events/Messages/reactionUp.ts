@@ -1,8 +1,8 @@
-import { Event } from "../../structures/Event";
-import { clientExtend as client } from "../..";
-import { db } from "../..";
+import { Event } from "../../structures/Event.js";
+import { clientExtend as client } from "../../index.js";
+import { db } from "../../index.js";
 import { EmbedBuilder } from "discord.js";
-import { SuggestionStatus } from "../../database/types/Suggestions";
+import { SuggestionStatus } from "../../database/types/Suggestions.js";
 
 export default new Event('messageReactionAdd', async(reaction, user) => {
     const { message, emoji } = reaction

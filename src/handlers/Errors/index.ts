@@ -1,6 +1,6 @@
-import '../../utils/log'
+import '../../utils/log/index.js'
 import { WebhookClient, EmbedBuilder } from 'discord.js'
-import { version } from '../../../package.json'
+import { version } from '../../../package.json' with { type: "json" }
 export class ErrorHandler {
     constructor() {
         process.on('uncaughtException', async (err, origin) => {

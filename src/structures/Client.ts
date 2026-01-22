@@ -12,13 +12,13 @@ import {
 } from "discord.js";
 import path from 'path';
 import glob from "glob";
-import { Event } from './Event'; 
+import { Event } from './Event.js'; 
 import { promisify } from "util";
-import { ButtonType } from "../typings/Button";
-import { CommandType } from "../typings/SlashCommand";
-import { CommandType as CommandTypeSub } from "../typings/SlashSubCommands";
-import { RegisterCommandsOptions } from "../typings/Client";
-import { MenuType } from "../typings/Menu";
+import { ButtonType } from "../typings/Button.js";
+import { CommandType } from "../typings/SlashCommand.js";
+import { CommandType as CommandTypeSub } from "../typings/SlashSubCommands.js";
+import { RegisterCommandsOptions } from "../typings/Client.js";
+import { MenuType } from "../typings/Menu.js";
 
 const globPromise = promisify(glob);
 

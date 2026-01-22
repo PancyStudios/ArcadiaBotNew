@@ -1,4 +1,4 @@
-import { Command } from "../../../structures/CommandSlashSimple";
+import { Command } from "../../../structures/CommandSlashSimple.js";
 import { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } from "discord.js";
 
 export default new Command({

@@ -1,9 +1,9 @@
-import { Event } from "../../structures/Event";
+import { Event } from "../../structures/Event.js";
 import { ActivityType } from 'discord.js';
-import { InstallGuild } from "../../utils/func";
-import { clientExtend } from "../..";
-import { db } from "../..";
-import { version } from "../../../package.json";
+import { InstallGuild } from "../../utils/func/index.js";
+import { clientExtend } from "../../index.js";
+import { db } from "../../index.js";
+import { version } from "../../../package.json" with { type: "json" };
 
 export default new Event('ready', async(client) => {
     console.debug(`Bot listo como ${client.user.tag}`);

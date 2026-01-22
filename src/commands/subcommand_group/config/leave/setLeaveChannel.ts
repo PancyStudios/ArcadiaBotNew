@@ -1,8 +1,8 @@
-import { Command } from "../../../../structures/SubCommandSlash";
+import { Command } from "../../../../structures/SubCommandSlash.js";
 import { ApplicationCommandOptionType, ChannelType, EmbedBuilder } from "discord.js";
-import { errorManager } from "../../../..";
-import { db } from "../../../..";
-import { version } from '../../../../../package.json'
+import { errorManager } from "../../../../index.js";
+import { db } from "../../../../index.js";
+import { version } from '../../../../../package.json' with { type: "json" }
 
 export default new Command({
     name: 'set_channel',

@@ -1,6 +1,6 @@
 import { Guild, GuildMember } from "discord.js"
-import { db as ArcadiaDb } from "../.."
-import { AutostatsTypes } from "../../database/types/Guild"
+import { db as ArcadiaDb } from "../../index.js"
+import { AutostatsTypes } from "../../database/types/Guild.js"
 
 export async function InstallGuild(guild: Guild) {
     const { guilds } = ArcadiaDb

@@ -1,7 +1,7 @@
-import { Command } from '../../../structures/SubCommandSlash';
-import { db } from '../../..';
+import { Command } from '../../../structures/SubCommandSlash.js';
+import { db } from '../../../index.js';
 import { ApplicationCommandOptionType, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ColorResolvable, resolveColor, EmbedBuilder } from 'discord.js';
-import { isUrl, textChange } from '../../../utils/func';
+import { isUrl, textChange } from '../../../utils/func/index.js';
 import hexColorRegex from 'hex-color-regex';
 
 export default new Command({
