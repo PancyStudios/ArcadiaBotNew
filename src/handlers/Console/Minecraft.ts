@@ -29,7 +29,7 @@ export class MinecraftConsole {
 
 	constructor(options: MinecraftConsoleOptions) {
 		this.options = {
-			maxBufferChars: 1750,
+			maxBufferChars: 3500,
 			forceSendIntervalMs: 15000,
 			...options,
 		};
@@ -165,24 +165,39 @@ export class MinecraftConsole {
 
 		const content = '```ansi\n' + this.consoleBuffer.trim() + '\n```';
 
+		let sentSuccessfully = false;
+
 		try {
 			await this.discordChannel.send(content);
+			sentSuccessfully = true;
 			console.log(`[MinecraftConsole] Enviado: ${this.consoleBuffer.length} chars`);
 			this.lastSentTime = Date.now();
 		} catch (err) {
 			console.error('Error Discord:' + (err as Error).message, '[MinecraftConsole]');
 			if ((err as any)?.message?.includes('2000') || (err as any)?.code === 50035) {
+				let allChunksSent = true;
 				const chunks = this.splitIntoChunks(this.consoleBuffer, 900);
 				for (const chunk of chunks) {
 					if (chunk.trim()) {
-						await this.discordChannel.send('```ansi\n' + chunk.trim() + '\n```').catch(console.error);
-						await new Promise(r => setTimeout(r, 1200));
+						try {
+							await this.discordChannel.send('```ansi\n' + chunk.trim() + '\n```');
+							await new Promise(r => setTimeout(r, 1200));
+						} catch (e) {
+							console.error('Error sending chunk:', e);
+							allChunksSent = false;
+						}
 					}
+				}
+				if (allChunksSent) {
+					sentSuccessfully = true;
+					this.lastSentTime = Date.now();
 				}
 			}
 		}
 
-		this.consoleBuffer = '';
+		if (sentSuccessfully) {
+			this.consoleBuffer = '';
+		}
 	}
 
 	private splitIntoChunks(text: string, maxLen: number): string[] {
