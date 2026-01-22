@@ -26,10 +26,16 @@ export class MinecraftConsole {
 	private socketUrl: string | null = null;
 	private currentToken: string | null = null;
 	private reconnectTimer: NodeJS.Timeout | null = null;
+	private readonly codeBlockPrefix = '```ansi\n';
+	private readonly codeBlockSuffix = '\n```';
+	private readonly discordHardLimit = 2000;
+	private safeChunkSize!: number;
+	private isSending = false;
+	private pendingFlush = false;
 
 	constructor(options: MinecraftConsoleOptions) {
 		this.options = {
-			maxBufferChars: 3500,
+			maxBufferChars: 1900,
 			forceSendIntervalMs: 15000,
 			...options,
 		};
@@ -38,6 +44,10 @@ export class MinecraftConsole {
 		if (channel instanceof TextChannel) {
 			this.discordChannel = channel;
 			console.log(`[MinecraftConsole] Canal encontrado: #${channel.name}`);
+			this.safeChunkSize = Math.min(
+				this.options.maxBufferChars,
+				this.discordHardLimit - this.codeBlockPrefix.length - this.codeBlockSuffix.length - 50,
+			);
 			this.start();
 		} else {
 			console.error('[MinecraftConsole] Canal no válido:', this.options.channelId);
@@ -160,57 +170,55 @@ export class MinecraftConsole {
 		this.reconnectTimer = setTimeout(() => this.connectWebSocket(), 5000);
 	}
 
-	private async sendBuffer(): Promise<void> {
-		if (!this.consoleBuffer.trim() || !this.discordChannel) return;
-
-		const content = '```ansi\n' + this.consoleBuffer.trim() + '\n```';
-
-		let sentSuccessfully = false;
-
-		try {
-			await this.discordChannel.send(content);
-			sentSuccessfully = true;
-			console.log(`[MinecraftConsole] Enviado: ${this.consoleBuffer.length} chars`);
-			this.lastSentTime = Date.now();
-		} catch (err) {
-			console.error('Error Discord:' + (err as Error).message, '[MinecraftConsole]');
-			if ((err as any)?.message?.includes('2000') || (err as any)?.code === 50035) {
-				let allChunksSent = true;
-				const chunks = this.splitIntoChunks(this.consoleBuffer, 900);
-				for (const chunk of chunks) {
-					if (chunk.trim()) {
-						try {
-							await this.discordChannel.send('```ansi\n' + chunk.trim() + '\n```');
-							await new Promise(r => setTimeout(r, 1200));
-						} catch (e) {
-							console.error('Error sending chunk:', e);
-							allChunksSent = false;
-						}
-					}
-				}
-				if (allChunksSent) {
-					sentSuccessfully = true;
-					this.lastSentTime = Date.now();
-				}
-			}
+	private async sendBuffer(force: boolean = false): Promise<void> {
+		if (this.isSending) {
+			this.pendingFlush = true;
+			return;
 		}
 
-		if (sentSuccessfully) {
-			this.consoleBuffer = '';
+		if (!this.consoleBuffer.trim() || !this.discordChannel) return;
+
+		this.isSending = true;
+
+		try {
+			while (this.consoleBuffer.trim().length > 0 && (force || this.consoleBuffer.length >= this.safeChunkSize)) {
+				const chunk = this.nextChunk();
+				if (!chunk) break;
+
+				try {
+					await this.discordChannel.send(this.codeBlockPrefix + chunk + this.codeBlockSuffix);
+					this.lastSentTime = Date.now();
+				} catch (err) {
+					console.error('Error Discord:' + (err as Error).message, '[MinecraftConsole]');
+					if (this.safeChunkSize > 500) {
+						this.safeChunkSize = Math.max(500, Math.floor(this.safeChunkSize / 2));
+						this.consoleBuffer = chunk + '\n' + this.consoleBuffer;
+						continue;
+					}
+					break;
+				}
+			}
+		} finally {
+			this.isSending = false;
+			if (this.pendingFlush) {
+				this.pendingFlush = false;
+				await this.sendBuffer(true);
+			}
 		}
 	}
 
-	private splitIntoChunks(text: string, maxLen: number): string[] {
-		const chunks: string[] = [];
-		let start = 0;
-		while (start < text.length) {
-			let end = start + maxLen;
-			const nl = text.lastIndexOf('\n', end);
-			if (nl > start) end = nl;
-			chunks.push(text.slice(start, end));
-			start = end + 1;
-		}
-		return chunks;
+	private nextChunk(): string | null {
+		if (!this.consoleBuffer.trim()) return null;
+
+		const limit = this.safeChunkSize;
+		let slice = this.consoleBuffer.slice(0, limit);
+		const lastNl = slice.lastIndexOf('\n');
+		if (lastNl > Math.floor(limit * 0.6)) slice = slice.slice(0, lastNl);
+
+		this.consoleBuffer = this.consoleBuffer.slice(slice.length);
+		this.consoleBuffer = this.consoleBuffer.replace(/^\n+/, '');
+
+		return slice.trimEnd();
 	}
 
 	public start(): void {
@@ -219,7 +227,7 @@ export class MinecraftConsole {
 		// Envío forzado cada X segundos
 		setInterval(() => {
 			if (this.consoleBuffer.trim() && Date.now() - this.lastSentTime >= this.options.forceSendIntervalMs) {
-				this.sendBuffer();
+				this.sendBuffer(true);
 			}
 		}, this.options.forceSendIntervalMs);
 	}
