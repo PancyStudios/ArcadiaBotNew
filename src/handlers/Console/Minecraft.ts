@@ -28,14 +28,14 @@ export class MinecraftConsole {
 	private reconnectTimer: NodeJS.Timeout | null = null;
 	private readonly codeBlockPrefix = '```ansi\n';
 	private readonly codeBlockSuffix = '\n```';
-	private readonly discordHardLimit = 2000;
+	private readonly discordHardLimit = 890;
 	private safeChunkSize!: number;
 	private isSending = false;
 	private pendingFlush = false;
 
 	constructor(options: MinecraftConsoleOptions) {
 		this.options = {
-			maxBufferChars: 1900,
+			maxBufferChars: 890,
 			forceSendIntervalMs: 15000,
 			...options,
 		};
