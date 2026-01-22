@@ -65,6 +65,13 @@ export type AutostatsSettings = {
     types: AutostatsTypes[]
 }
 
+export type RandomNumberSettings = {
+    min: number,
+    max: number,
+    channel: string,
+    number: number
+}
+
 export enum StatusTypes {
     Java = 0,
     Bedrock = 1
@@ -161,6 +168,7 @@ export type GuildDb = {
         tickets: TicketsSettings,
         suggestions: suggestionsSettings,
         welcome: WelcomeOrLeaveSettings,
+        randomNumber: RandomNumberSettings,
         leave: WelcomeOrLeaveSettings,
         messageLogs: MessageLogsSettings,
         logs: LogsSettings,

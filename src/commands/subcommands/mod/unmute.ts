@@ -18,8 +18,6 @@ export default new Command({
     run: async({ interaction, args }) => {
         const { guild } = interaction
         const member = args.getMember('usuario') as GuildMember
-        member.isCommunicationDisabled()
-        member.disableCommunicationUntil
 
         if(interaction.member.roles.highest.position <= member.roles.highest.position) return interaction.reply({ embeds: [
             new EmbedBuilder()
@@ -27,7 +25,7 @@ export default new Command({
             .setDescription('No puedes desilenciar a un usuario con un rol igual o superior al tuyo.')
             .setColor('Red')
             .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
-        ], ephemeral: true })
+        ], flags: ['Ephemeral']  })
         const me = await interaction.guild.members.fetch(interaction.client.user.id)
         if(me.roles.highest.position <= member.roles.highest.position) return interaction.reply({ embeds: [
             new EmbedBuilder()
@@ -35,21 +33,21 @@ export default new Command({
             .setDescription('No puedo desilenciar a este usuario debido a que tiene un rol igual o superior al mio.')
             .setColor('Red')
             .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
-        ], ephemeral: true })
+        ], flags: ['Ephemeral']  })
         if(member.permissions.has(['Administrator']) || member.permissions.has(['MuteMembers'])) return interaction.reply({ embeds: [
             new EmbedBuilder()
             .setTitle('⚒️ - Error de permisos')
             .setDescription('No puedo desilenciar a este usuario debido a que tiene el permiso `MuteMembers`.')
             .setColor('Red')
             .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
-        ], ephemeral: true })
+        ], flags: ['Ephemeral']  })
         if(!member.moderatable) return interaction.reply({ embeds: [
             new EmbedBuilder()
             .setTitle('⚒️ - Error de permisos')
             .setDescription('No puedo desilenciar a este usuario.')
             .setColor('Red')
             .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
-        ], ephemeral: true })
+        ], flags: ['Ephemeral']  })
 
         member.timeout(null, `Desmuteado por ${interaction.user.tag}`)
         
@@ -59,7 +57,7 @@ export default new Command({
             .setDescription(`El usuario ${member.user.tag} ha sido desilenciado`)
             .setColor('Green')
             .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
-        ], ephemeral: true }).catch(() => {})
+        ], flags: ['Ephemeral'] }).catch(() => {})
 
         member.send({ embeds: [
             new EmbedBuilder()

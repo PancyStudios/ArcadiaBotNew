@@ -36,7 +36,7 @@ export default new Command({
         const { global } = db;
         const rolesId = client.getBotAccessRoleIdCache()
         const rolePermission = interaction.member.roles.cache.hasAny(...rolesId)
-        if(!rolePermission) return interaction.reply({ content: 'No tienes permisos para ejecutar este comando', ephemeral: true })
+        if(!rolePermission) return interaction.reply({ content: 'No tienes permisos para ejecutar este comando', flags: ['Ephemeral'] })
         const type = args.getString('type')
         const channel = args.getChannel('channel') as TextChannel;
         const globalDb = await global.findOne({ botId: interaction.client.user.id })

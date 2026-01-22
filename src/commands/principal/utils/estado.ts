@@ -19,7 +19,7 @@ export default new Command({
                 .setDescription(`Estado del servidor: 🟢 | **En linea**\n
                     Version del servidor: **${dataOnline.version}\n
                     Jugadores en linea **${dataOnline.players.online}/${dataOnline.players.max}**\n
-                    Lista de jugadores: **\`\`\`${dataOnline.players.list?.map(player => player.name).join(' ') ?? "Ningun jugador conectado"}\`\`\`**`)
+                    Lista de jugadores: \`\`\`${dataOnline.players.list?.map(player => player.name).join(' ') ?? "Ningun jugador conectado"}\`\`\``)
                 .setFooter({ text: '💫 - Developed by PancyStudio', iconURL: interaction.guild.iconURL() })
                 .setColor('Green')
                 .setTimestamp()

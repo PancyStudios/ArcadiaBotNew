@@ -1,10 +1,10 @@
 declare global {
     interface Console {
         log(message: any, ...optionalParams: any[]): void;
-        log(message: any, prefix:string | null | undefined): void;
-        warn(message: any, prefix:string | null | undefined): void;
-        debug(message: any, prefix:string | null | undefined): void;
-        error(message: any, prefix:string | null | undefined): void;
+        log(message: any, prefix?:string | null | undefined): void;
+        warn(message: any, prefix?:string | null | undefined): void;
+        debug(message: any, prefix?:string | null | undefined): void;
+        error(message: any, prefix?:string | null | undefined): void;
     }    
     namespace NodeJS {
         interface ProcessEnv {
@@ -18,6 +18,9 @@ declare global {
             mongooseDbPassword: string;
             mongooseDbUrl: string
             ipMc: string;
+            arcadiaPanelUrl: string;
+            arcadiaPanelKey: string;
+
         }
     }
 }

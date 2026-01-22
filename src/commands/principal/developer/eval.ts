@@ -1,7 +1,7 @@
 import { Command } from '../../../structures/CommandSlashSimple';
 import { transpile } from 'typescript';
 import { inspect } from 'util';
-import { EmbedBuilder, ActionRowBuilder, ModalBuilder, TextInputStyle, TextInputBuilder } from 'discord.js';
+import {EmbedBuilder, ActionRowBuilder, ModalBuilder, TextInputStyle, TextInputBuilder, LabelBuilder} from 'discord.js';
 
 export default new Command({
     name: 'eval',
@@ -15,15 +15,16 @@ export default new Command({
 
         const EvalInput = new TextInputBuilder()
         .setCustomId('code')
-        .setLabel('Codigo a evaluar')
         .setStyle(TextInputStyle.Paragraph)
         .setMaxLength(1010)
         .setMinLength(8)
         .setRequired(true)
 
+        const CodeInput = new LabelBuilder()
+          .setLabel('Codigo a evaluar')
+          .setTextInputComponent(EvalInput)
 
-        const ActionRow1 = new ActionRowBuilder<TextInputBuilder>().addComponents(EvalInput)
-        EvalModal.addComponents(ActionRow1)
+        EvalModal.addLabelComponents(CodeInput)
 
         await interaction.showModal(EvalModal)
 
@@ -87,8 +88,6 @@ export default new Command({
                 ])
                 .setFooter({ text: `Evaluado por ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL()})
                 msg.edit({ embeds: [SecondEmbed] });
-
-                
             }
         })
     }

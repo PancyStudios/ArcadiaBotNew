@@ -9,9 +9,9 @@ export default new Command({
     run: async ({ interaction }) => {
         const embed = new EmbedBuilder()
         .setTitle('📶 | IP del servidor')
-        .setDescription(`🌐 - IP: \`arcadianetwork.ddns.net\`
+        .setDescription(`🌐 - IP: \`arcanetwork.ddns.net\`
         🛜 - PUERTO: \`19132\`
-        📶 - Versión: \`1.21.50\`
+        📶 - Versión: \`1.21.130\`
         
         📩 - **Nota:** \`El servidor es unicamente minecraft bedrock\``)
         .setColor('Purple')

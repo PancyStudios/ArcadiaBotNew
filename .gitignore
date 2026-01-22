@@ -4,3 +4,4 @@ yarn.lock
 ignore/
 *.lock
 *.log
+.idea

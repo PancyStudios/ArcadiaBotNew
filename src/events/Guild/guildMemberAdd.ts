@@ -23,7 +23,6 @@ export default new Event('guildMemberAdd', async (member) => {
             description: embed.embed.description ? textChange(embed.embed.description, member, guild) : null,
             color: embed.embed.color ? embed.embed.color : null,
             timestamp: embed.embed.timestamp ? new Date() : null,
-            
         })
     }
 })

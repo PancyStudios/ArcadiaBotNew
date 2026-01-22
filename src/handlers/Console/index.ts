@@ -12,11 +12,6 @@ export default class ConsoleHandler {
         console.log(`Version de Node: ${process.version}`)
         console.log(`Version de Discord.js: ${DiscordJSVersion}`)
         console.log(`Version de TypeScript: ${TypeScriptVersion}`)
-
-        // Que muestre especificaciones del sistema, como la cantidad de memoria que esta usando el bot
-        console.log(`CPU: ${process.cpuUsage().system}%`)
-        console.log(`Memoria usada: ${process.memoryUsage().heapUsed}`)
-        console.log(`Memoria total: ${totalmem}`)
-        console.log(`Memoria libre: ${freemem}`)
+        console.log(`Version de V8: ${cachedDataVersionTag()}`)
     }
 }

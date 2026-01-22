@@ -4,12 +4,12 @@ import { ApplicationCommandOptionType, StringSelectMenuBuilder, StringSelectMenu
 
 export default new Command({
     name: 'warn-remove',
-    description: 'Elimina un warn de un usuario',
+    description: 'Elimina un advertencias de un usuario',
     type: ApplicationCommandOptionType.Subcommand,
     options: [
         {
             name: 'user',
-            description: 'Usuario a eliminar el warn',
+            description: 'Usuario a eliminar las advertencias',
             type: ApplicationCommandOptionType.User,
             required: true,
         }
