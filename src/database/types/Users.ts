@@ -4,6 +4,7 @@ export type UserGuild = {
 		guildId: string
 		userId: string
 		randomNumberWins: number
+		randomNumberAttempts?: number
 }
 
 export const UserSchema = new Schema({

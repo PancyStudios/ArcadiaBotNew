@@ -1,20 +1,89 @@
 import { Event } from '../../structures/Event';
 import {db} from "../../index";
+import {Document, Types} from "mongoose";
+import {GuildDb} from "../../database/types/Guild";
+import {Colors, EmbedBuilder} from "discord.js";
 
 export default new Event('messageCreate', async (message) => {
-		if (message.author.bot) return;
-		const dbGuild = await db.guilds.findOne({ id: message.guild.id });
-		if (!dbGuild) return;
+	if (message.author.bot) return;
+	const dbGuild = await db.guilds.findOne({ id: message.guild.id });
+	if (!dbGuild) return;
+	if (dbGuild.settings.randomNumber?.channel) {
 		const number = dbGuild.settings.randomNumber?.number
+		if (message.channel.id !== dbGuild.settings.randomNumber.channel) return;
+		const min = dbGuild.settings.randomNumber?.min || 1;
+		const max = dbGuild.settings.randomNumber?.max || 3000;
 		if (!number) {
 			if(message.content.startsWith('start')) {
-				const min = dbGuild.settings.randomNumber?.min || 1;
-				const max = dbGuild.settings.randomNumber?.max || 3000;
-				const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
-				dbGuild.settings.randomNumber.number = randomNum;
-				await dbGuild.save();
-				message.channel.send(`¡He seleccionado un número aleatorio entre ${min} y ${max}! ¡Intenta adivinarlo!`);
+				if(message.author.id !== '') return message.reply({ content: `El juego solo puede iniciarlo @imximef`});
+				await generateRandomNumber(dbGuild)
+				message.channel.send('🕹️ ¡El juego ha comenzado!');
+				message.channel.send(`🎲 Adivina el número Estoy pensando en un número del ${min} al ${max}. Solo escribe tu apuesta aquí abajo.`);
 			}
-		} 
+		} else {
+			const guessedNumber = parseInt(message.content, 10);
+			if (!isNaN(guessedNumber)) {
+				if (guessedNumber === number) {
+					const winnerDb = await db.users.findOne({ userId: message.author.id });
+					const newWin = winnerDb.randomNumberWins = (winnerDb.randomNumberWins || 0) + 1;
+					const WinnerEmbed = new EmbedBuilder()
+						.setAuthor({ name: message.author.displayName })
+						.setThumbnail(message.author.displayAvatarURL())
+						.setDescription(`✨ ¡Tenemos un ganador! <@${message.author.id}> acertó el número secreto: ${number}\n > ${message.author.displayName} +1 win, Ahora cuentas con ${newWin} wins!`)
+						.setColor(Colors.Green)
+						.setFooter({ text: `💫 - Developed by PancyStudios | 🏹 Intentos: ${winnerDb.randomNumberWins}` })
+					message.reply(`¡Felicidades ${message.author}, has adivinado el número ${number}! 🎉`)
+					dbGuild.settings.randomNumber.number = null;
+					await dbGuild.save();
+					if (winnerDb) {
+						winnerDb.randomNumberWins = newWin;
+						await winnerDb.save();
+					}
+					await attemptsReset();
 
+					await generateRandomNumber(dbGuild)
+					message.channel.send('🕹️ ¡El juego ha comenzado!');
+					message.channel.send(`🎲 Adivina el número Estoy pensando en un número del ${min} al ${max}. Solo escribe tu apuesta aquí abajo.`);
+				} else if (guessedNumber < number) {
+					await attemptsIncrement(message.author.id);
+					message.react(':x:');
+					message.react('⬆️');
+				} else {
+					await attemptsIncrement(message.author.id);
+					message.react(':x:');
+					message.react('⬇️');
+				}
+			}
+		}
+	}
+
+	async function attemptsReset() {
+		const users = await db.users.find({ guildId: message.guild.id });
+		for (const user of users) {
+			user.randomNumberAttempts = 0;
+			await user.save();
+		}
+	}
 })
+
+async function attemptsIncrement(userId: string) {
+	const userDb = await db.users.findOne({ userId });
+	if (userDb) {
+		userDb.randomNumberAttempts = (userDb.randomNumberAttempts || 0) + 1;
+		await userDb.save();
+	} else {
+		const newUserDb = new db.users({ userId, randomNumberWins: 0, randomNumberAttempts: 1 });
+		await newUserDb.save();
+	}
+}
+
+async function generateRandomNumber(dbGuild: Document<unknown, {}, GuildDb, Record<string, any>, {}> & GuildDb & {
+	_id: Types.ObjectId
+}) {
+	const min = dbGuild.settings.randomNumber?.min || 1;
+	const max = dbGuild.settings.randomNumber?.max || 3000;
+	const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+	dbGuild.settings.randomNumber.number = randomNum;
+	await dbGuild.save();
+	console.log(`Generated new random number ${randomNum} for guild ${dbGuild.guildId}`, 'RandomNumber');
+}
