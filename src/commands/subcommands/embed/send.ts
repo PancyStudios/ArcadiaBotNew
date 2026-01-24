@@ -59,23 +59,23 @@ export default new Command({
             }
         }
         const EmbedSend = new EmbedBuilder({
-            title: embed.title ? textChange(embed.title, member, guild) : null,
-            description: embed.description ? textChange(embed.description, member, guild) : null,
+            title: embed.title ? textChange(embed.title, member, guild) : undefined,
+            description: embed.description ? textChange(embed.description, member, guild) : undefined,
             color: embed.color,
             image: embed.image ? {
-                url: isUrl(embed.image.url, member, guild) ? textChange(embed.image.url) : null
-            } : null,
+                url: isUrl(embed.image.url, member, guild) ? textChange(embed.image.url) : undefined
+            } : undefined,
             thumbnail: embed.thumbnail ? {
-                url: isUrl(embed.thumbnail.url, member, guild) ? textChange(embed.thumbnail.url) : null
-            } : null,  
+                url: isUrl(embed.thumbnail.url, member, guild) ? textChange(embed.thumbnail.url) : undefined
+            } : undefined,
             footer: embed.footer ? {
                 text: textChange(embed.footer.text, member, guild),
-                iconURL: isUrl(embed.footer.icon_url, member, guild) ? textChange(embed.footer.icon_url) : null
-            } : null,
+                iconURL: isUrl(embed.footer.icon_url, member, guild) ? textChange(embed.footer.icon_url) : undefined
+            } : undefined,
             author: embed.author ? {
                 name: textChange(embed.author.name, member, guild),
-                iconURL: isUrl(embed.author.icon_url, member, guild) ? textChange(embed.author.icon_url) : null
-            } : null,
+                iconURL: isUrl(embed.author.icon_url, member, guild) ? textChange(embed.author.icon_url) : undefined
+            } : undefined,
         })
 
         console.log(EmbedSend.data, 'debug')

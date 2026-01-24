@@ -77,36 +77,43 @@ export async function InstallGuild(guild: Guild) {
     newGuild.save()
     console.log(`El servidor ${guild.name} (${guild.id}) ha sido añadido a la base de datos`, 'GUILD')
 }
-export function isUrl(url: string, member?: GuildMember, guild?: Guild) {
-    const regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi);
-    if(!url) return false
-    const finalText = textChange(url, member, guild)
-    if(!finalText.match(regex)) return false
-    if(finalText.match(regex).length === 0) return false
-    return true
+export function isUrl(input: string | null | undefined, member?: GuildMember, guild?: Guild): boolean {
+    if (!input) return false;
+
+    const final = textChange(input, member, guild);
+    if (!final) return false;
+
+    const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi;
+    return regex.test(final);
 }
 
-export function textChange(text: string, member?: GuildMember, guild?: Guild) {
-    if(!text) return null;
-    let returnText:string
-    if(member) {
-        returnText = text.replaceAll(/{member}/g, member.toString())
-        returnText = text.replaceAll(/{member.user.tag}/g, member.user.tag)
-        returnText = text.replaceAll(/{member.user.name}/g, member.user.username)
-        returnText = text.replaceAll(/{member.user.iconUrl}/g, member.user.avatarURL())
-        returnText = text.replaceAll(/{member.iconUrl}/g, member.displayAvatarURL())
-        returnText = text.replaceAll(/{member.id}/g, member.id)
+export function textChange(text: string | null | undefined, member?: GuildMember, guild?: Guild): string | null {
+    if (!text) return null;
+
+    let result = text;  // empezamos con el texto original
+
+    if (member) {
+        result = result.replaceAll(/{member}/g,            member.toString());
+        result = result.replaceAll(/{member\.user\.tag}/g, member.user.tag ?? member.user.username);
+        result = result.replaceAll(/{member\.user\.name}/g, member.user.username);
+        result = result.replaceAll(/{member\.user\.iconUrl}/g, member.user.avatarURL() ?? "");
+        result = result.replaceAll(/{member\.iconUrl}/g,    member.displayAvatarURL() ?? "");
+        result = result.replaceAll(/{member\.id}/g,         member.id);
     }
-    if(guild) {
-        returnText = text.replaceAll(/{guild}/g, guild.toString())
-        returnText = text.replaceAll(/{guild.name}/g, guild.name)
-        returnText = text.replaceAll(/{guild.id}/g, guild.id)
-        returnText = text.replaceAll(/{guild.owner}/g, guild.members.cache.get(guild.ownerId).toString())
-        returnText = text.replaceAll(/{guild.owner.tag}/g, guild.members.cache.get(guild.ownerId).user.tag)
-        returnText = text.replaceAll(/{guild.owner.name}/g, guild.members.cache.get(guild.ownerId).user.username)
-        returnText = text.replaceAll(/{guild.owner.id}/g, guild.ownerId)
-        returnText = text.replaceAll(/{guild.members_size}/g, guild.members.cache.size.toString())
-        returnText = text.replaceAll(/{guild.iconUrl}/g, guild.iconURL())
+
+    if (guild) {
+        const owner = guild.members.cache.get(guild.ownerId);
+
+        result = result.replaceAll(/{guild}/g,             guild.toString());
+        result = result.replaceAll(/{guild\.name}/g,       guild.name);
+        result = result.replaceAll(/{guild\.id}/g,         guild.id);
+        result = result.replaceAll(/{guild\.owner}/g,      owner?.toString() ?? "");
+        result = result.replaceAll(/{guild\.owner\.tag}/g, owner?.user.tag ?? "");
+        result = result.replaceAll(/{guild\.owner\.name}/g, owner?.user.username ?? "");
+        result = result.replaceAll(/{guild\.owner\.id}/g,  guild.ownerId);
+        result = result.replaceAll(/{guild\.members_size}/g, guild.memberCount.toString()); // mejor que .cache.size
+        result = result.replaceAll(/{guild\.iconUrl}/g,    guild.iconURL({ size: 1024 }) ?? "");
     }
-    return returnText;
+
+    return result;
 }
