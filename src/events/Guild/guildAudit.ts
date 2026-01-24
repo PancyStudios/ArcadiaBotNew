@@ -16,7 +16,7 @@ export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => 
 
 	console.debug(`Proceso de entrada\n\nCanal local: ${channel?.id || 'No definido'}\nCanal global: ${globalChannel?.id || 'No definido'}`, 'GuildAuditLog')
 
-	if(global.BansAndkickGlobalRegister) {
+	if(globalDb.BansAndkickGlobalRegister || guildDb.settings.logs.channel) {
 		switch (auditLog.action) {
 			case AuditLogEvent.MemberBanAdd:
 				const embedBuilder = new EmbedBuilder()
