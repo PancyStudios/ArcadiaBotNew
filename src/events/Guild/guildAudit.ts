@@ -26,11 +26,11 @@ export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => 
 					.setFields([
 						{
 							name: '> **Usuario Baneado:**',
-							value: `> \`${user.tag} (${user.id})\``
+							value: `\`${user.tag} (${user.id})\``
 						},
 						{
 							name: '> **Autor del baneo:**',
-							value: `> \`${userExecutor.tag} (${userExecutor.id})\``
+							value: `\`${userExecutor.tag} (${userExecutor.id})\``
 						},
 						{
 							name: '> **Razón del baneo:**',
@@ -38,7 +38,7 @@ export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => 
 						},
 						{
 							name: '🕒 Fecha:',
-							value: `> \`<t:${Math.floor(Date.now() / 1000)}>\``,
+							value: `<t:${Math.floor(Date.now() / 1000)}>`,
 							inline: true
 						}
 					])
@@ -54,15 +54,15 @@ export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => 
 					.setFields([
 						{
 							name: '> **Usuario desbaneado:**',
-							value: `> \`${user.tag} (${user.id})\``
+							value: `\`${user.tag} (${user.id})\``
 						},
 						{
 							name: '> **Autor del desbaneo:**',
-							value: `> \`${userExecutor.tag} (${userExecutor.id})\``
+							value: `\`${userExecutor.tag} (${userExecutor.id})\``
 						},
 						{
 							name: '🕒 Fecha:',
-							value: `> \`<t:${Math.floor(Date.now() / 1000)}>\``,
+							value: `<t:${Math.floor(Date.now() / 1000)}>`,
 							inline: true
 						}
 					])
@@ -78,11 +78,11 @@ export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => 
 					.setFields([
 						{
 							name: '> **Usuario Expulsado:**',
-							value: `> \`${user.tag} (${user.id})\``
+							value: `\`${user.tag} (${user.id})\``
 						},
 						{
 							name: '> **Autor:**',
-							value: `> \`${userExecutor.tag} (${userExecutor.id})\``
+							value: `\`${userExecutor.tag} (${userExecutor.id})\``
 						},
 						{
 							name: '> **Razón de la Expulsion:**',
@@ -90,7 +90,7 @@ export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => 
 						},
 						{
 							name: '🕒 Fecha:',
-							value: `> \`<t:${Math.floor(Date.now() / 1000)}>\``,
+							value: `<t:${Math.floor(Date.now() / 1000)}>`,
 							inline: true
 						}
 					])
