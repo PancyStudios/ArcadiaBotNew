@@ -137,13 +137,13 @@ export default new Command({
 
         let colorResolve: number
         colorResolve = resolveColor(color)
-        if (!colorResolve) return interaction.reply({ content: 'Color invalido', ephemeral: true })
+        if (!colorResolve) return interaction.reply({ content: 'Color invalido', flags: ['Ephemeral'] })
 
         const { member, guild } = interaction
         const { embeds } = db
 
         const embedDb = await embeds.findOne({ guildId: guild.id, name: embed })
-        if (!embedDb) return interaction.reply({ content: 'No se ha encontrado el embed', ephemeral: true })
+        if (!embedDb) return interaction.reply({ content: 'No se ha encontrado el embed', flags: ['Ephemeral'] })
 
         if (colorResolve) embedDb.embed.color = colorResolve
         if (footer_icon_url && isUrl(footer_icon_url, member, guild)) embedDb.embed.footer.icon_url = footer_icon_url

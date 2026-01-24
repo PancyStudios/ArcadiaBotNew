@@ -14,6 +14,7 @@ export default new Command({
             required: false,
         }
     ],
+    userPermissions: ['ManageMessages'],
 
     run: async({ interaction, args, client }) => {
         const { warns } = db
@@ -31,7 +32,7 @@ export default new Command({
         .setDescription(`Espere un momento en lo que obtenemos las advertencias del usuario...\n\n> 💫 - **Cantidad de advertencias:** Desconocido\n> 🕒 - **Fecha de consulta:** <t:${Math.floor(Date.now() / 1000)}>`)
         .setFooter({ text: '💫 - Developed by PancyStudios', iconURL: interaction.guild.iconURL() })
 
-        await interaction.reply({ embeds: [embedFind], ephemeral: true })
+        await interaction.reply({ embeds: [embedFind], flags: ['Ephemeral'] })
         if(user) {
             if(!(interaction.member.permissions.has('ManageMessages') || interaction.member.roles.cache.hasAny(...client.getBotAccessRoleIdCache()))) return interaction.editReply({ content: 'No tienes permisos para ver la lista de advertencias de otro usuario', embeds: [] })
             const warnList = await warns.findOne({ guildId: interaction.guildId, userId: user.id })

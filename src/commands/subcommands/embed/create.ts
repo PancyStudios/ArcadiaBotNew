@@ -144,6 +144,7 @@ export default new Command({
         const DescriptionLabel = new LabelBuilder()
         .setLabel('Descripción')
         .setTextInputComponent(DescriptionInput)
+
         const AuthorLabel = new LabelBuilder()
         .setLabel('Autor')
         .setTextInputComponent(AuthorInput)
@@ -176,11 +177,11 @@ export default new Command({
         let image_url = Modal.fields.getTextInputValue('image_url')
         if(image_url === "") image_url = null
 
-        const thumbnail_url = args.getString('thumbnail_url')
-        const author_icon_url = args.getString('author_icon_url')
-        const footer_icon_url = args.getString('footer_icon_url')
+        const thumbnail_url = args.getString('thumbnail_url', false)
+        const author_icon_url = args.getString('author_icon_url', false)
+        const footer_icon_url = args.getString('footer_icon_url', false)
 
-        const colorInput = args.getString('color') as ColorResolvable
+        const colorInput = args.getString('color', false) as ColorResolvable
         let color:number 
         if(colorInput) color = resolveColor(colorInput)
         if(!colorInput) color = null
