@@ -69,12 +69,13 @@ export default new Command({
                 url: isUrl(embed.thumbnail.url, member, guild) ? textChange(embed.thumbnail.url, member, guild) : undefined
             } : undefined,
             footer: embed.footer ? {
-                text: textChange(embed.footer.text, member, guild),
-                iconURL: isUrl(embed.footer.icon_url, member, guild) ? textChange(embed.footer.icon_url, member, guild) : undefined
+                text: embed.footer.text ? textChange(embed.footer.text, member, guild) : undefined,
+                icon_url: isUrl(embed.footer.icon_url, member, guild) ? textChange(embed.footer.icon_url, member, guild) : undefined
             } : undefined,
             author: embed.author ? {
                 name: textChange(embed.author.name, member, guild),
-                iconURL: isUrl(embed.author.icon_url, member, guild) ? textChange(embed.author.icon_url, member, guild) : undefined
+                icon_url: isUrl(embed.author.icon_url, member, guild) ? textChange(embed.author.icon_url, member, guild) : undefined,
+                url: null
             } : undefined,
         })
 

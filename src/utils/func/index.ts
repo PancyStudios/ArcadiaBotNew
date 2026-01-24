@@ -88,7 +88,7 @@ export function isUrl(input: string | null | undefined, member?: GuildMember, gu
 }
 
 export function textChange(text: string | null | undefined, member?: GuildMember, guild?: Guild): string | null {
-    if (!text) return null;
+    if (!text) return undefined;
 
     let result = text;  // empezamos con el texto original
 
