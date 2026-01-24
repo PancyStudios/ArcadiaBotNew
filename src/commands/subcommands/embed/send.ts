@@ -79,9 +79,8 @@ export default new Command({
             } : undefined,
         })
 
-        console.log(EmbedSend.data, 'debug')
 
-        channel ? await channel.send({ embeds: [embed] }) : await interaction.channel.send({ embeds: [embed] })
-        interaction.reply({ content: "Embed enviado con exito", ephemeral: true })
+        channel ? await channel.send({ embeds: [EmbedSend] }) : await interaction.channel.send({ embeds: [EmbedSend] })
+        interaction.reply({ content: "Embed enviado con exito", flags: ['Ephemeral'] })
     }
 })
