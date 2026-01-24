@@ -16,7 +16,7 @@ export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => 
 
 	console.debug(`Proceso de entrada\n\nCanal local: ${channel?.id || 'No definido'}\nCanal global: ${globalChannel?.id || 'No definido'}`, 'GuildAuditLog')
 
-	if(globalDb.BansAndkickGlobalRegister || guildDb.settings.logs.channel) {
+	if(channel || globalChannel) {
 		switch (auditLog.action) {
 			case AuditLogEvent.MemberBanAdd:
 				const embedBuilder = new EmbedBuilder()
@@ -102,5 +102,7 @@ export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => 
 				console.debug('Acción de registro de auditoría no manejada en el sistema de logs globales.', 'GuildAuditLog')
 				break;
 		}
+	} else {
+		console.debug('Ningún canal de logs definido, se omite el registro de la auditoría.', 'GuildAuditLog')
 	}
 })
