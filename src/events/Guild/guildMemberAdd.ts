@@ -16,7 +16,7 @@ export default new Event('guildMemberAdd', async (member) => {
     if(!channel) return errorManager.reportError(`No se ha encontrado el canal de bienvenidas en ${guild.id} (${guild.name})`, 'GuildMemberAdd')
     const message = textChange(welcome.message, member, guild)
     const embed = await embeds.findOne({ guildId: guild.id, name: welcome.embed })
-    let EmbedFinal: EmbedBuilder
+    let EmbedFinal: EmbedBuilder | null = null;
     if(embed) {
         EmbedFinal = new EmbedBuilder({
             title: embed.embed.title ? textChange(embed.embed.title, member, guild) : null,
@@ -25,4 +25,7 @@ export default new Event('guildMemberAdd', async (member) => {
             timestamp: embed.embed.timestamp ? new Date() : null,
         })
     }
+    channel.send({ content: message || null, embeds: EmbedFinal ? [EmbedFinal] : [] }).catch(() => {
+        return errorManager.reportError(`No se ha podido enviar el mensaje de bienvenidas en ${guild.id} (${guild.name})`, 'GuildMemberAdd')
+    })
 })
