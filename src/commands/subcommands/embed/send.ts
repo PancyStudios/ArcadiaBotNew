@@ -63,18 +63,18 @@ export default new Command({
             description: embed.description ? textChange(embed.description, member, guild) : undefined,
             color: embed.color,
             image: embed.image ? {
-                url: isUrl(embed.image.url, member, guild) ? textChange(embed.image.url) : undefined
+                url: isUrl(embed.image.url, member, guild) ? textChange(embed.image.url, member, guild) : undefined
             } : undefined,
             thumbnail: embed.thumbnail ? {
-                url: isUrl(embed.thumbnail.url, member, guild) ? textChange(embed.thumbnail.url) : undefined
+                url: isUrl(embed.thumbnail.url, member, guild) ? textChange(embed.thumbnail.url, member, guild) : undefined
             } : undefined,
             footer: embed.footer ? {
                 text: textChange(embed.footer.text, member, guild),
-                iconURL: isUrl(embed.footer.icon_url, member, guild) ? textChange(embed.footer.icon_url) : undefined
+                iconURL: isUrl(embed.footer.icon_url, member, guild) ? textChange(embed.footer.icon_url, member, guild) : undefined
             } : undefined,
             author: embed.author ? {
                 name: textChange(embed.author.name, member, guild),
-                iconURL: isUrl(embed.author.icon_url, member, guild) ? textChange(embed.author.icon_url) : undefined
+                iconURL: isUrl(embed.author.icon_url, member, guild) ? textChange(embed.author.icon_url, member, guild) : undefined
             } : undefined,
         })
 
