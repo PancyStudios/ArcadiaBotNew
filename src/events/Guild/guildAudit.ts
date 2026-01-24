@@ -3,7 +3,7 @@ import {clientExtend as client, db} from "../../index";
 import {AuditLogEvent, EmbedBuilder, TextChannel, User} from "discord.js";
 
 export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => {
-		console.log(`Nueva entrada en el registro de auditoría TYPE: ${auditLog.actionType} en el servidor ${guild.name} (${guild.id})`, 'GuildAuditLog')
+		console.log(`Nueva entrada en el registro de auditoría TYPE: ${auditLog.action} en el servidor ${guild.name} (${guild.id})`, 'GuildAuditLog')
 	const guildDb = await db.guilds.findOne({ guildId: guild.id })
 	const globalDb = await db.global.findOne({ botId: guild.client.user.id });
 

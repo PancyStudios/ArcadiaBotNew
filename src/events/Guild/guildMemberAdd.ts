@@ -1,5 +1,5 @@
 import { Event } from "../../structures/Event";
-import { Embed, EmbedBuilder, GuildMember } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import { textChange } from "../../utils/func";
 import { db, errorManager } from "../.."; 
 
