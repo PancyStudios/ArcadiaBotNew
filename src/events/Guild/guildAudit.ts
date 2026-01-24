@@ -14,6 +14,8 @@ export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => 
 	const channel = await guild.channels.fetch(guildDb.settings.logs.channel).catch(() => {}) as TextChannel
 	const globalChannel = await client.channels.fetch(globalDb.BansAndkickGlobalRegister).catch(() => {}) as TextChannel
 
+	console.debug(`Proceso de entrada\n\nCanal local: ${channel?.id || 'No definido'}\nCanal global: ${globalChannel?.id || 'No definido'}`, 'GuildAuditLog')
+
 	if(global.BansAndkickGlobalRegister) {
 		switch (auditLog.action) {
 			case AuditLogEvent.MemberBanAdd:
@@ -41,8 +43,8 @@ export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => 
 						}
 					])
 					.setFooter({ text: '💫 - Developed by PancyStudios', iconURL: client.user.avatarURL() })
-					if(globalChannel) await globalChannel.send({ embeds: [embedBuilder] }).catch(() => {})
-					if(channel) await channel?.send({ embeds: [embedBuilder] }).catch(() => {})
+					if(globalChannel) await globalChannel.send({ embeds: [embedBuilder] }).catch((e) => { console.error(e) })
+					if(channel) await channel?.send({ embeds: [embedBuilder] }).catch((e) => { console.error(e) })
 				break;
 			case AuditLogEvent.MemberBanRemove:
 				const embedUnBanBuilder = new EmbedBuilder()
@@ -65,8 +67,8 @@ export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => 
 						}
 					])
 					.setFooter({ text: '💫 - Developed by PancyStudios', iconURL: client.user.avatarURL() })
-				if(globalChannel) await globalChannel.send({ embeds: [embedUnBanBuilder] }).catch(() => {})
-				if(channel) await channel?.send({ embeds: [embedUnBanBuilder] }).catch(() => {})
+				if(globalChannel) await globalChannel.send({ embeds: [embedUnBanBuilder] }).catch((e) => { console.error(e) })
+				if(channel) await channel?.send({ embeds: [embedUnBanBuilder] }).catch((e) => { console.error(e) })
 				break;
 			case AuditLogEvent.MemberKick:
 				const embedKickBuilder = new EmbedBuilder()
@@ -93,10 +95,11 @@ export default new Event('guildAuditLogEntryCreate', async (auditLog, guild) => 
 						}
 					])
 					.setFooter({ text: '💫 - Developed by PancyStudios', iconURL: client.user.avatarURL() })
-				if(globalChannel) await globalChannel.send({ embeds: [embedKickBuilder] }).catch(() => {})
-				if(channel) await channel?.send({ embeds: [embedKickBuilder] }).catch(() => {})
+				if(globalChannel) await globalChannel.send({ embeds: [embedKickBuilder] }).catch((e) => { console.error(e) })
+				if(channel) await channel?.send({ embeds: [embedKickBuilder] }).catch((e) => { console.error(e) })
 				break;
 			default:
+				console.debug('Acción de registro de auditoría no manejada en el sistema de logs globales.', 'GuildAuditLog')
 				break;
 		}
 	}
