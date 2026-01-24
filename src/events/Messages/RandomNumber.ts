@@ -24,7 +24,7 @@ export default new Event('messageCreate', async (message) => {
 			const guessedNumber = parseInt(message.content, 10);
 			if (!isNaN(guessedNumber)) {
 				if (guessedNumber === number) {
-					const winnerDb = await db.users.findOne({ userId: message.author.id });
+					const winnerDb = await db.users.findOne({ guildId: message.guild.id, userId: message.author.id });
 					const newWin = winnerDb.randomNumberWins = (winnerDb.randomNumberWins || 0) + 1;
 					const WinnerEmbed = new EmbedBuilder()
 						.setAuthor({ name: message.author.displayName })
@@ -67,7 +67,7 @@ export default new Event('messageCreate', async (message) => {
 })
 
 async function attemptsIncrement(userId: string, guildId: string) {
-	const userDb = await db.users.findOne({ userId });
+	const userDb = await db.users.findOne({ guildId, userId });
 	if (userDb) {
 		userDb.randomNumberAttempts = (userDb.randomNumberAttempts || 0) + 1;
 		await userDb.save();
