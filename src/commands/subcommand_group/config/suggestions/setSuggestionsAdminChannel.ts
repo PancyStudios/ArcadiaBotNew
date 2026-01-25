@@ -5,7 +5,7 @@ import { db } from "../../../../index";
 import { version } from '../../../../../package.json'
 
 export default new Command({
-	name: 'set_suggestionsadmin_channel',
+	name: 'set_admin_channel',
 	description: 'Establece el canal de log de sugerencias',
 	options: [
 		{

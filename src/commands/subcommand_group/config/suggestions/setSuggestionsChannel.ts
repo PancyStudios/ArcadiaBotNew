@@ -5,7 +5,7 @@ import { db } from "../../../../index";
 import { version } from '../../../../../package.json'
 
 export default new Command({
-    name: 'set_suggestions_channel',
+    name: 'set_channel',
     description: 'Establece el canal de sugerencias',
     options: [
         {

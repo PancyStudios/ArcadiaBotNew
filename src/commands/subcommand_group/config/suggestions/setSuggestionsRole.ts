@@ -5,7 +5,7 @@ import { db } from "../../../..";
 import { version } from '../../../../../package.json'
 
 export default new Command({
-		name: 'set_suggestions_role',
+		name: 'set_manage_role',
 		description: 'Establece el rol para gestionar las sugerencias',
 		options: [
 			{

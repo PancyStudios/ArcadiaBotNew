@@ -24,6 +24,7 @@ export const SuggestionSchema = new Schema({
     lastAction: { type: SchemaTypes.String, required: false },
     suggestion: { type: SchemaTypes.String, required: true },
     status: { type: SchemaTypes.Number, required: true },
+    topic: { type: SchemaTypes.String, required: true },
     date: { type: SchemaTypes.Date, required: true },
     upVotes: { type: SchemaTypes.Number, required: true },
     downVotes: { type: SchemaTypes.Number, required: true },
