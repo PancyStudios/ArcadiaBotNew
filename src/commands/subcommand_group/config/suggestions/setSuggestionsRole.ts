@@ -20,9 +20,9 @@ export default new Command({
 
 		run: async ({ interaction, args }) => {
 			const role = args.getRole('role', true);
-			const { guildId } = interaction;
+			const {guildId} = interaction;
 			try {
-				const guildDb = await db.guilds.findOne({ guildId });
+				const guildDb = await db.guilds.findOne({guildId});
 
 				guildDb.settings.suggestions.roleGestion = role.id;
 				await guildDb.save();
@@ -32,20 +32,20 @@ export default new Command({
 					.setDescription(`El rol para gestionar las sugerencias ha sido establecido correctamente en <@&${role.id}>`)
 					.setColor('Green')
 					.setTimestamp()
-					.setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
+					.setFooter({text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
-				interaction.reply({ embeds: [SuccessEmbed], flags: ['Ephemeral'] })
+				interaction.reply({embeds: [SuccessEmbed], flags: ['Ephemeral']})
 
-			}
-			catch (err) {
+			} catch (err) {
 				const ErrEmbed = new EmbedBuilder()
 					.setTitle('⚠️ | Un error inesperado ha ocurrido')
 					.setDescription(`Algo ha salido mal al intentar guardar el rol\n\nError: \`${err}\`\n\n\`\`\`⚒️ El error a sido reportado automaticamente, intente de nuevo más tarde\`\`\``)
 					.setColor('Red')
 					.setTimestamp()
-					.setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
+					.setFooter({text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
-				interaction.reply({ embeds: [ErrEmbed], flags: ['Ephemeral'] })
+				interaction.reply({embeds: [ErrEmbed], flags: ['Ephemeral']})
 				errorManager.reportError(err, 'src/commands/subcommand_group/config/suggestions/setSuggestionsRole.ts')
 			}
-}
+		}
+})
