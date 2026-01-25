@@ -91,12 +91,15 @@ export default new Command({
                 suggestion: suggestion,
                 guildId: interaction.guildId,
                 topic: '',
+                channelId: channel.id,
+                messageId: '',
                 lastAction: 'none',
                 lastAdminId: client.user.id,
+                adminComment: '',
                 status: SuggestionStatus.Pending,
                 date: new Date(),
                 upVotes: 0,
-                downVotes: 0
+                downVotes: 0,
             })
 
             const SuccessEmbed = new EmbedBuilder()
