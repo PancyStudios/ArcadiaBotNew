@@ -1,11 +1,11 @@
 import { Command } from "../../../../structures/SubCommandSlash";
 import { ApplicationCommandOptionType, ChannelType, EmbedBuilder } from "discord.js";
-import { errorManager } from "../../../..";
-import { db } from "../../../..";
+import { errorManager } from "../../../../index";
+import { db } from "../../../../index";
 import { version } from '../../../../../package.json'
 
 export default new Command({
-    name: 'suggestions_channel',
+    name: 'set_suggestions_channel',
     description: 'Establece el canal de sugerencias',
     options: [
         {
@@ -32,7 +32,7 @@ export default new Command({
             .setTimestamp()
             .setFooter({ text: `💫 - Developed by PancyStudio` })
 
-            if(!channel.permissionsFor(interaction.guild.members.cache.get(client.user.id)).has('SendMessages')) return interaction.reply({ embeds: [NomPermsEmbed], ephemeral: true })
+            if(!channel.permissionsFor(interaction.guild.members.cache.get(client.user.id)).has('SendMessages')) return interaction.reply({ embeds: [NomPermsEmbed], flags: ['Ephemeral'] })
             
             guildDb.settings.suggestions.suggestionsChannel = channel.id;
             await guildDb.save();
@@ -44,7 +44,7 @@ export default new Command({
             .setTimestamp()
             .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
-            interaction.reply({ embeds: [SuccessEmbed], ephemeral: true })                              
+            interaction.reply({ embeds: [SuccessEmbed],  flags: ['Ephemeral'] })
         } catch (err) {
             const ErrEmbed = new EmbedBuilder()
             .setTitle('⚠️ | Un error inesperado ha ocurrido')
@@ -53,8 +53,8 @@ export default new Command({
             .setTimestamp()
             .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
-            interaction.reply({ embeds: [ErrEmbed], ephemeral: true })
-            errorManager.reportError(err, 'src/subcommand_group/admin/server/setSuggestionsChannel.ts')
+            interaction.reply({ embeds: [ErrEmbed], flags: ['Ephemeral']})
+            errorManager.reportError(err, 'src/subcommand_group/admin/suggestions/setSuggestionsChannel.ts')
         }
     }
 })

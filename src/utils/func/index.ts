@@ -1,6 +1,7 @@
-import { Guild, GuildMember } from "discord.js"
-import { db as ArcadiaDb } from "../.."
+import {EmbedBuilder, Guild, GuildMember, Message } from "discord.js"
+import {db as ArcadiaDb} from "../.."
 import { AutostatsTypes } from "../../database/types/Guild"
+import { version } from '../../../package.json'
 
 export async function InstallGuild(guild: Guild) {
     const { guilds } = ArcadiaDb
@@ -116,4 +117,18 @@ export function textChange(text: string | null | undefined, member?: GuildMember
     }
 
     return result;
+}
+
+export async function editSuggestionMessage(message: Message) {
+    const suggest = await ArcadiaDb.suggestions.findOne({ messageId: message.id })
+    if(!suggest) throw new Error(`Suggestion ${message.id} doesn't exist`);
+    const { authorId, suggestion, date, upVotes, downVotes } = suggest
+    const SuggestionEmbed = new EmbedBuilder()
+      .setTitle('📩 | Nueva sugerencia')
+      .setDescription(`\`\`\`${suggestion}\`\`\`\n📝 - **Estado:** \`Pendiente\`\n📅 - **Fecha:** \`${date.toLocaleDateString()}\`\n👤 - **Autor:** <@${authorId}>\n\n📊 - **Votos:**\n🔼 - **A favor:** \`${upVotes}\`\n🔽 - **En contra:** \`${downVotes}\``)
+      .setColor('Blue')
+      .setTimestamp()
+      .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
+
+    await message.edit({ embeds: [SuggestionEmbed] }).catch((e) => console.warn(e) )
 }

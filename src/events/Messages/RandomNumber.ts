@@ -17,8 +17,8 @@ export default new Event('messageCreate', async (message) => {
 			if(message.content.toString().startsWith('start')) {
 				if(message.author.id !== '852683369899622430') return message.reply({ content: `El juego solo puede iniciarlo @imximef`});
 				await generateRandomNumber(dbGuild)
-				message.channel.send('🕹️ ¡El juego ha comenzado!');
-				message.channel.send(`🎲 Adivina el número Estoy pensando en un número del ${min} al ${max}. Solo escribe tu apuesta aquí abajo.`);
+				await message.channel.send('🕹️ ¡El juego ha comenzado!');
+				await message.channel.send(`🎲 Adivina el número Estoy pensando en un número del ${min} al ${max}. Solo escribe tu apuesta aquí abajo.`);
 			}
 		} else {
 			const guessedNumber = parseInt(message.content, 10);
@@ -32,7 +32,7 @@ export default new Event('messageCreate', async (message) => {
 						.setDescription(`✨ ¡Tenemos un ganador! <@${message.author.id}> acertó el número secreto: ${number}\n > ${message.author.displayName} +1 win, Ahora cuentas con ${newWin} wins!`)
 						.setColor(Colors.Green)
 						.setFooter({ text: `💫 - Developed by PancyStudios | 🏹 Intentos: ${winnerDb.randomNumberAttempts}` })
-					message.reply({embeds: [WinnerEmbed]})
+					await message.reply({embeds: [WinnerEmbed]})
 					dbGuild.settings.randomNumber.number = null;
 					await dbGuild.save();
 					if (winnerDb) {
@@ -42,16 +42,16 @@ export default new Event('messageCreate', async (message) => {
 					await attemptsReset();
 
 					await generateRandomNumber(dbGuild)
-					message.channel.send('🕹️ ¡El juego ha comenzado!');
-					message.channel.send(`🎲 Adivina el número Estoy pensando en un número del ${min} al ${max}. Solo escribe tu apuesta aquí abajo.`);
+					await message.channel.send('🕹️ ¡El juego ha comenzado!');
+					await message.channel.send(`🎲 Adivina el número Estoy pensando en un número del ${min} al ${max}. Solo escribe tu apuesta aquí abajo.`);
 				} else if (guessedNumber < number) {
 					await attemptsIncrement(message.author.id, message.guild.id);
-					message.react('❌');
-					message.react('⬆️');
+					await message.react('❌');
+					await message.react('⬆️');
 				} else {
 					await attemptsIncrement(message.author.id, message.guild.id);
-					message.react('❌');
-					message.react('⬇️');
+					await message.react('❌');
+					await message.react('⬇️');
 				}
 			}
 		}

@@ -6,6 +6,7 @@ export type Suggestions = {
     lastAdminId: string,
     lastAction: string,
     suggestion: string,
+    topic: string,
     status: SuggestionStatus,
     date: Date,
     channelId: string,

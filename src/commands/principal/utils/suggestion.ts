@@ -6,7 +6,7 @@ import {
     TextInputBuilder,
     TextInputStyle,
     ActionRowBuilder,
-    StringSelectMenuBuilder, LabelBuilder
+    StringSelectMenuBuilder, LabelBuilder, TextDisplayBuilder
 } from "discord.js";
 import { errorManager } from "../../..";
 import { db } from "../../..";
@@ -16,10 +16,17 @@ import { SuggestionStatus } from "../../../database/types/Suggestions";
 export default new Command({
     name: 'suggest',
     description: 'Sugiere algo para el servidor',
+    options: [{
+        name: 'topic',
+        description: 'Tema de la sugerencia',
+        type: 3, // ApplicationCommandOptionType.String
+        required: true,
+    }],
     isBeta: true,
     
-    run: async ({ interaction, client }) => {
+    run: async ({ interaction, client, args }) => {
         try {
+            const topic = args.getString('topic')
             const GuildDb = await db.guilds.findOne({ guildId: interaction.guildId })
             const NotChannelEmbed = new EmbedBuilder()
             .setTitle('⚠️ | Canal de sugerencias no establecido')
@@ -54,6 +61,8 @@ export default new Command({
             .setTitle('📩 | Nueva sugerencia')
             .setCustomId('suggestion')
 
+            const WarningTextDisplay = new TextDisplayBuilder()
+              .setContent('⚠️ | Por favor, asegúrate de que tu sugerencia cumple con las normas del servidor y no contiene contenido inapropiado. Las sugerencias que no cumplan con estas normas serán rechazadas.')
     
             const SuggestEntry = new TextInputBuilder()
             .setCustomId('suggestion_text')
@@ -66,7 +75,8 @@ export default new Command({
             const SuggestLabel = new LabelBuilder()
               .setLabel('Sugerencia')
               .setTextInputComponent(SuggestEntry);
-    
+
+            SuggestionModal.addTextDisplayComponents([WarningTextDisplay])
             SuggestionModal.addLabelComponents([SuggestLabel])
     
             await interaction.showModal(SuggestionModal)
@@ -76,11 +86,11 @@ export default new Command({
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             const suggestion = suggestionUnfilter.replace(urlRegex, '[URL]')
 
-
             const data = await db.suggestions.create({
                 authorId: interaction.user.id,
                 suggestion: suggestion,
                 guildId: interaction.guildId,
+                topic: '',
                 lastAction: 'none',
                 lastAdminId: client.user.id,
                 status: SuggestionStatus.Pending,
@@ -97,15 +107,8 @@ export default new Command({
             .setFooter({ text: `💫 - Developed by PancyStudio | Arcadia Bot v${version}`})
 
             const SuggestionEmbed = new EmbedBuilder()
-            .setTitle('📩 | Nueva sugerencia')
-            .setDescription(`\`\`\`${suggestion}\`\`\`
-            📝 - **Estado:** \`Pendiente\`
-            📅 - **Fecha:** \`${new Date().toLocaleDateString()}\`
-            👤 - **Autor:** <@${interaction.user.id}>
-            
-            📊 - **Votos:**
-            🔼 - **A favor:** \`0\`
-            🔽 - **En contra:** \`0\``)
+            .setTitle(`📩 Nueva sugerencia | ${topic}`)
+            .setDescription(`\`\`\`${suggestion}\`\`\`\n📝 - **Estado:** \`Pendiente\`\n📅 - **Fecha:** \`${new Date().toLocaleDateString()}\`\n👤 - **Autor:** <@${interaction.user.id}>\n\n📊 - **Votos:**\n🔼 - **A favor:** \`0\`\n🔽 - **En contra:** \`0\``)
             .setColor('Blue')
             .setTimestamp()
             .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
@@ -130,15 +133,34 @@ export default new Command({
 
             const ActionRow2 = new ActionRowBuilder<StringSelectMenuBuilder>()
             .addComponents(Menu)
-
-
             const message = await channel.send({ embeds: [SuggestionEmbed], components: [ActionRow2] })
             await message.react('🔼')
             await message.react('🔽')
-            const messageLast = await response.reply({ embeds: [SuccessEmbed], ephemeral: true })
-            data.messageId = messageLast.id
+            await message.startThread({ name: `Sugerencia - ${topic} | ${message.id}`, reason: 'Habilitando hilo para la sugerencia', rateLimitPerUser: 3 })
+            await response.reply({ embeds: [SuccessEmbed], flags: ['Ephemeral'] })
+            data.messageId = message.id
             await data.save()
             console.debug(`Suggestion created: ${data._id}`)
+            interaction.user.send({ content: `Hola tu sugerencia fue enviada exitosamente, la ID de tu sugerencia es la siguiente: \`${data._id}\`` }).catch(() => {
+                const msgCannotDmEmbed = message.reply(`${interaction.user.toString()}\n⚠️ | No se ha podido enviar un mensaje privado, pero tu sugerencia fue enviada exitosamente, la ID de tu sugerencia es la siguiente: \`${data._id}\`, puedes guardarla para comprobar el estado de tu sugerencia más tarde.\n\nEste mensaje se borrara en 1 minuto.`)
+                setTimeout(() => {
+                    msgCannotDmEmbed.then(msg => msg.delete().catch(() => {}))
+                }, 60000);
+
+            })
+            const SuggestionAdminEmbed = new EmbedBuilder()
+              .setTitle('🛠️ | Nueva sugerencia enviada')
+              .setDescription(`La sugerencia es la siguiente: ${message.url}\nSuggestion ID: \`${data._id}\`\nAutor: <@${interaction.user.id}>\n\`\`\`${suggestion}\`\`\``)
+              .setColor('Yellow')
+              .setTimestamp()
+              .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
+
+            const staffChannelId = GuildDb?.settings?.suggestions?.adminChannel
+            if(!staffChannelId) return;
+            const staffChannel = await interaction.guild.channels.fetch(staffChannelId, { cache: false }) as TextChannel
+            if(!staffChannel) return;
+            if(!staffChannel.isSendable()) return;
+            await staffChannel.send({ embeds: [SuggestionAdminEmbed] })
         } catch (err) {
             const ErrEmbed = new EmbedBuilder()
             .setTitle('⚠️ | Un error inesperado ha ocurrido')
