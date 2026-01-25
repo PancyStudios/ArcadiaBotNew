@@ -5,7 +5,7 @@ import { db } from "../../../..";
 import { version } from '../../../../../package.json'
 
 export default new Command({
-	name: 'set_status',
+	name: 'set_status_w',
 	description: 'Establece el estado de las bienvenidas',
 	options: [
 		{

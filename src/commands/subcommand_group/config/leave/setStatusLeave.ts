@@ -1,112 +1,50 @@
 import { Command } from "../../../../structures/SubCommandSlash";
-import { ApplicationCommandOptionType, ChannelType, EmbedBuilder } from "discord.js";
+import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { errorManager } from "../../../..";
 import { db } from "../../../..";
 import { version } from '../../../../../package.json'
 
 export default new Command({
 	name: 'set_status',
-	description: 'Establece el embed de salidas',
+	description: 'Establece el estado de las salidas',
 	options: [
 		{
-			name: 'embed',
-			description: 'Embed de salidas',
-			type: ApplicationCommandOptionType.String,
+			name: 'status',
+			description: 'Estado de las salidas',
+			type: ApplicationCommandOptionType.Boolean,
 			required: true,
 		}
 	],
 	type: ApplicationCommandOptionType.Subcommand,
 	userPermissions: ['ManageGuild'],
-	botPermissions: ['SendMessages', 'EmbedLinks'],
+	botPermissions: ['SendMessages'],
 
-	auto: async ({ interaction, args }) => {
-		const focus = args.getFocused(true)
-		if(focus.name !== 'embed') return;
-		const { guildId } = interaction
-		const { embeds } = db
-		const embedDb = await embeds.find({ guildId: guildId })
-
-		const choices = embedDb.map(embed => {
-			return embed.name
-		})
-		const filter = choices.filter(embed => embed.startsWith(focus.value)).slice(0, 24)
-		const filterArray = filter.map(embed => {
-			return {
-				name: embed,
-				value: embed
-			}
-		})
-		filterArray.push({
-			value: 'Nunguno',
-			name: 'null'
-		})
-		interaction.respond(filterArray)
-	},
 	run: async ({ interaction, args }) => {
-		const embed = args.getString('embed');
+		const status = args.getBoolean('status');
 		const { guildId } = interaction;
-		const { guilds } = db;
-		const guildDb = await guilds.findOne({ guildId });
-		if(embed === 'null') {
-			const NotEmbed = new EmbedBuilder()
-				.setTitle('⚠️ | Embed no establecido')
-				.setDescription('El embed de bienvenidas no esta establecido')
+		try {
+			const guildDb = await db.guilds.findOne({ guildId });
+
+			guildDb.modules.leave = status;
+			await guildDb.save();
+			const SuccessEmbed = new EmbedBuilder()
+				.setTitle('✅ | Estado de salidas establecido')
+				.setDescription(`El estado de las salidas ha sido establecido correctamente a \`${status ? 'Activado' : 'Desactivado'}\``)
+				.setColor('Green')
+				.setTimestamp()
+				.setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
+
+			await interaction.reply({ embeds: [SuccessEmbed], flags: ['Ephemeral'] })
+		} catch (err) {
+			const ErrEmbed = new EmbedBuilder()
+				.setTitle('⚠️ | Un error inesperado ha ocurrido')
+				.setDescription(`Algo ha salido mal al intentar guardar el estado\n\nError: \`${err}\`\n\n\`\`\`⚒️ El error a sido reportado automaticamente, intente de nuevo más tarde\`\`\``)
 				.setColor('Red')
 				.setTimestamp()
-				.setFooter({ text: `💫 - Developed by PancyStudio` })
+				.setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
-			if(guildDb.settings.welcome.embed === '') return interaction.reply({ embeds:[NotEmbed], ephemeral: true })
-			try {
-				guildDb.settings.welcome.embed = '';
-				await guildDb.save();
-				const SuccessEmbed = new EmbedBuilder()
-					.setTitle('✅ | Embed de bienvenidas eliminado')
-					.setDescription('El embed de bienvenidas ha sido eliminado correctamente')
-					.setColor('Green')
-					.setTimestamp()
-					.setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
-				interaction.reply({ embeds: [SuccessEmbed], ephemeral: true })
-			} catch (err) {
-				const ErrEmbed = new EmbedBuilder()
-					.setTitle('⚠️ | Un error inesperado ha ocurrido')
-					.setDescription(`Algo ha salido mal al intentar guardar el embed\n\nError: \`${err}\`\n\n\`\`\`⚒️ El error a sido reportado automaticamente, intente de nuevo más tarde\`\`\``)
-					.setColor('Red')
-					.setTimestamp()
-					.setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
-				interaction.reply({ embeds: [ErrEmbed], ephemeral: true })
-				errorManager.reportError(err, 'src/commands/subcommand_group/config/welcome/setWelcomeEmbed.ts')
-			}
-		} else {
-			try {
-				const embedDb = await db.embeds.findOne({ guildId: guildId, name: embed })
-				if(!embedDb) {
-					const NotEmbed = new EmbedBuilder()
-						.setTitle('⚠️ | Embed no encontrado')
-						.setDescription('El embed de bienvenidas no ha sido encontrado')
-						.setColor('Red')
-						.setTimestamp()
-						.setFooter({ text: `💫 - Developed by PancyStudio` })
-					return interaction.reply({ embeds: [NotEmbed], ephemeral: true })
-				}
-				guildDb.settings.welcome.embed = embedDb.name;
-				await guildDb.save();
-				const SuccessEmbed = new EmbedBuilder()
-					.setTitle('✅ | Embed de bienvenidas establecido')
-					.setDescription(`El embed de bienvenidas ha sido establecido correctamente en \`${embed}\``)
-					.setColor('Green')
-					.setTimestamp()
-					.setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
-				interaction.reply({ embeds: [SuccessEmbed], ephemeral: true })
-			} catch (err) {
-				const ErrEmbed = new EmbedBuilder()
-					.setTitle('⚠️ | Un error inesperado ha ocurrido')
-					.setDescription(`Algo ha salido mal al intentar guardar el embed\n\nError: \`${err}\`\n\n\`\`\`⚒️ El error a sido reportado automaticamente, intente de nuevo más tarde\`\`\``)
-					.setColor('Red')
-					.setTimestamp()
-					.setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
-				interaction.reply({ embeds: [ErrEmbed], ephemeral: true })
-				errorManager.reportError(err, 'src/commands/subcommand_group/config/leave/setStatusLeave.ts')
-			}
+			await interaction.reply({ embeds: [ErrEmbed], flags: ['Ephemeral'] })
+			errorManager.reportError(err, 'src/subcommand_group/config/welcome/setStatusWelcome.ts')
 		}
 	}
 })

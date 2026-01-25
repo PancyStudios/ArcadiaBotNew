@@ -5,46 +5,57 @@ import { db } from "../../../..";
 import { version } from '../../../../../package.json'
 
 export default new Command({
-    name: 'set_status',
-    description: 'Establece el estado de las salidas',
+    name: 'set_channel',
+    description: 'Establece el canal de salidas',
     options: [
         {
-            name: 'status',
-            description: 'Estado de las salidas',
-            type: ApplicationCommandOptionType.Boolean,
+            name: 'channel',
+            description: 'Canal de salidas',
+            type: ApplicationCommandOptionType.Channel,
             required: true,
+            channelTypes: [ChannelType.GuildText]
         }
     ],
     type: ApplicationCommandOptionType.Subcommand,
     userPermissions: ['ManageGuild'],
     botPermissions: ['SendMessages'],
 
-    run: async ({ interaction, args }) => {
-        const status = args.getBoolean('status');
+    run: async ({ interaction, client, args }) => {
+        const channel = args.getChannel('channel', true, [ChannelType.GuildText]);
         const { guildId } = interaction;
         try {
             const guildDb = await db.guilds.findOne({ guildId });
 
-            guildDb.modules.welcome = status;
+            const NomPermsEmbed = new EmbedBuilder()
+              .setTitle('⚠️ | Permisos insuficientes')
+              .setDescription('No tengo los permisos suficientes para enviar mensajes en el canal establecido')
+              .setColor('Red')
+              .setTimestamp()
+              .setFooter({ text: `💫 - Developed by PancyStudio` })
+
+            if(!channel.permissionsFor(interaction.guild.members.cache.get(client.user.id)).has('SendMessages')) return interaction.reply({ embeds: [NomPermsEmbed], flags: ['Ephemeral'] })
+
+            guildDb.settings.leave.channel = channel.id;
             await guildDb.save();
+
             const SuccessEmbed = new EmbedBuilder()
-              .setTitle('✅ | Estado de salidas establecido')
-              .setDescription(`El estado de las salidas ha sido establecido correctamente a \`${status ? 'Activado' : 'Desactivado'}\``)
+              .setTitle('✅ | Canal de salidas establecido')
+              .setDescription(`El canal de salidas ha sido establecido correctamente en <#${channel.id}>`)
               .setColor('Green')
               .setTimestamp()
               .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
-            await interaction.reply({ embeds: [SuccessEmbed], flags: ['Ephemeral'] })
+            interaction.reply({ embeds: [SuccessEmbed], flags: ['Ephemeral'] })
         } catch (err) {
             const ErrEmbed = new EmbedBuilder()
               .setTitle('⚠️ | Un error inesperado ha ocurrido')
-              .setDescription(`Algo ha salido mal al intentar guardar el estado\n\nError: \`${err}\`\n\n\`\`\`⚒️ El error a sido reportado automaticamente, intente de nuevo más tarde\`\`\``)
+              .setDescription(`Algo ha salido mal al intentar guardar el canal\n\nError: \`${err}\`\n\n\`\`\`⚒️ El error a sido reportado automaticamente, intente de nuevo más tarde\`\`\``)
               .setColor('Red')
               .setTimestamp()
               .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
-            await interaction.reply({ embeds: [ErrEmbed], flags: ['Ephemeral'] })
-            errorManager.reportError(err, 'src/subcommand_group/config/welcome/setStatusWelcome.ts')
+            interaction.reply({ embeds: [ErrEmbed], flags: ['Ephemeral'] })
+            errorManager.reportError(err, 'src/subcommand_group/config/leave/setLeaveChannel.ts')
         }
     }
 })
