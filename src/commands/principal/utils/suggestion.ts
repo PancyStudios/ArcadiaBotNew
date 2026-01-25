@@ -43,10 +43,10 @@ export default new Command({
             .setFooter({ text: `💫 - Developed by PancyStudio | Arcas Bot v${version}`})
 
             const channelId = GuildDb?.settings?.suggestions?.suggestionsChannel
-            if(!channelId) return interaction.reply({ embeds: [NotChannelEmbed], ephemeral: true })
+            if(!channelId) return interaction.reply({ embeds: [NotChannelEmbed], flags: ['Ephemeral'] })
             
             const channel = interaction.guild.channels.cache.get(channelId) as TextChannel
-            if(!channel) return interaction.reply({ embeds: [NotFoundChannelEmbed], ephemeral: true })
+            if(!channel) return interaction.reply({ embeds: [NotFoundChannelEmbed], flags: ['Ephemeral'] })
 
             const NotPermissionsEmbed = new EmbedBuilder()
             .setTitle('⚠️ | Permisos insuficientes')
@@ -58,11 +58,11 @@ export default new Command({
             if(!channel.permissionsFor(interaction.guild.members.cache.get(client.user.id))?.has('SendMessages')) return interaction.reply({ embeds: [NotPermissionsEmbed], ephemeral: true })
 
             const SuggestionModal = new ModalBuilder()
-            .setTitle('📩 | Nueva sugerencia')
+            .setTitle('📩 Nueva sugerencia')
             .setCustomId('suggestion')
 
             const WarningTextDisplay = new TextDisplayBuilder()
-              .setContent('⚠️ | Por favor, asegúrate de que tu sugerencia cumple con las normas del servidor y no contiene contenido inapropiado. Las sugerencias que no cumplan con estas normas serán rechazadas.')
+              .setContent('⚠️ Por favor, asegúrate de que tu sugerencia cumple con las normas del servidor y no contiene contenido inapropiado. Las sugerencias que no cumplan con estas normas serán rechazadas.')
     
             const SuggestEntry = new TextInputBuilder()
             .setCustomId('suggestion_text')
@@ -90,7 +90,7 @@ export default new Command({
                 authorId: interaction.user.id,
                 suggestion: suggestion,
                 guildId: interaction.guildId,
-                topic: '',
+                topic: topic,
                 channelId: channel.id,
                 messageId: '',
                 lastAction: 'none',
